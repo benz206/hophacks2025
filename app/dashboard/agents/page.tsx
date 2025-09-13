@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Spinner } from '@/components/ui/spinner';
+import { toast } from 'sonner';
 
 type AssistantSummary = {
   name?: string;
@@ -34,6 +35,11 @@ export default function AgentsPage() {
   const [editFirst, setEditFirst] = useState("");
   const [editSystem, setEditSystem] = useState("");
   const [destNumbers, setDestNumbers] = useState<Record<string, string>>({});
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [confirmCallRow, setConfirmCallRow] = useState<AgentRow | null>(null);
+
+  const sanitizePhoneInput = (val: string) => val.replace(/\D/g, '').slice(0, 10);
+  const isValidPhone = (val: string) => /^\d{10}$/.test(val);
 
   function resetCreateForm() {
     setName("");
@@ -62,9 +68,11 @@ export default function AgentsPage() {
       const res = await fetch(`/api/agents/${rowId}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete agent');
       setStatus('Agent deleted.');
+      toast.success('Agent deleted');
       await loadAgents();
     } catch (err) {
       setStatus(err instanceof Error ? err.message : 'Unknown error');
+      toast.error(err instanceof Error ? err.message : 'Failed to delete agent');
     } finally {
       setLoading(false);
     }
@@ -97,6 +105,7 @@ export default function AgentsPage() {
       if (!resSave.ok) throw new Error('Failed to save agent');
 
       setStatus('Assistant created and saved.');
+      toast.success('Assistant created');
       // refresh list
       loadAgents();
       // close modal and reset form
@@ -104,6 +113,7 @@ export default function AgentsPage() {
       resetCreateForm();
     } catch (err) {
       setStatus(err instanceof Error ? err.message : 'Unknown error');
+      toast.error(err instanceof Error ? err.message : 'Failed to create assistant');
     } finally {
       setLoading(false);
     }
@@ -123,8 +133,10 @@ export default function AgentsPage() {
       });
       if (!res.ok) throw new Error('Failed to create call');
       setStatus('Outbound call created.');
+      toast.success('Call started');
     } catch (err) {
       setStatus(err instanceof Error ? err.message : 'Unknown error');
+      toast.error(err instanceof Error ? err.message : 'Failed to start call');
     } finally {
       setLoading(false);
     }
@@ -146,10 +158,12 @@ export default function AgentsPage() {
       });
       if (!res.ok) throw new Error('Failed to update agent');
       setStatus('Agent updated.');
+      toast.success('Agent updated');
       await loadAgents();
       setEditOpen(false);
     } catch (err) {
       setStatus(err instanceof Error ? err.message : 'Unknown error');
+      toast.error(err instanceof Error ? err.message : 'Failed to update agent');
     } finally {
       setLoading(false);
     }
@@ -246,46 +260,133 @@ export default function AgentsPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {agents.map((a) => (
-            <div key={a.id} className="rounded-lg border bg-card p-4 shadow-sm">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 space-y-3">
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground">{a.assistant?.name ?? 'Untitled'}</h3>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor={`dest-${a.id}`} className="text-sm font-medium">Destination Number</Label>
-                    <Input 
-                      id={`dest-${a.id}`} 
-                      placeholder="+1234567890" 
-                      value={destNumbers[a.agent_id] ?? ''} 
-                      onChange={(e) => setDestNumbers((prev) => ({ ...prev, [a.agent_id]: e.target.value }))}
-                      className="w-full max-w-xs"
-                    />
-                  </div>
+            <div key={a.id} className="rounded-lg border bg-card p-4 shadow-sm flex flex-col">
+              <div className="flex items-start justify-between">
+                <h3 className="text-lg font-semibold text-foreground">{a.assistant?.name ?? 'Untitled'}</h3>
+                <Button variant="secondary" size="sm" onClick={() => openEdit(a)} disabled={loading}>
+                  Edit
+                </Button>
+              </div>
+              <div className="flex-1 space-y-3 mt-2">
+                <div className="space-y-2">
+                  {(() => {
+                    const value = destNumbers[a.agent_id] ?? '';
+                    const valid = isValidPhone(value);
+                    return (
+                      <>
+                        <Label htmlFor={`dest-${a.id}`} className="text-sm font-medium">Destination Number</Label>
+                        <Input
+                          id={`dest-${a.id}`}
+                          placeholder="5551234567"
+                          inputMode="numeric"
+                          aria-invalid={value !== '' && !valid}
+                          value={value}
+                          onChange={(e) => {
+                            const next = sanitizePhoneInput(e.target.value);
+                            setDestNumbers((prev) => ({ ...prev, [a.agent_id]: next }));
+                          }}
+                          className="w-full"
+                        />
+                        {value !== '' && !valid ? (
+                          <p className="text-sm text-destructive">Please enter a 10-digit phone number.</p>
+                        ) : null}
+                      </>
+                    );
+                  })()}
                 </div>
-                <div className="flex flex-col gap-2">
-                  <Button variant="outline" size="sm" onClick={() => handleDeleteAgent(a.id)} disabled={loading}>
-                    {loading ? <Spinner size="sm" className="mr-2" /> : null}
-                    Delete
-                  </Button>
-                  <Button variant="secondary" size="sm" onClick={() => openEdit(a)} disabled={loading}>
-                    Edit
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    onClick={() => handleRowCall(a)} 
-                    disabled={loading || !destNumbers[a.agent_id]}
-                    className="bg-green-600 hover:bg-green-700"
-                  >
-                    {loading ? <Spinner size="sm" className="mr-2" /> : null}
-                    Call
-                  </Button>
-                </div>
+              </div>
+              <div className="mt-4 flex items-center justify-between gap-2">
+                <Button variant="destructive" size="sm" onClick={() => setConfirmDeleteId(a.id)} disabled={loading}>
+                  {loading ? <Spinner size="sm" className="mr-2" /> : null}
+                  Delete
+                </Button>
+                {(() => {
+                  const value = destNumbers[a.agent_id] ?? '';
+                  const valid = isValidPhone(value);
+                  return (
+                    <Button
+                      size="sm"
+                      onClick={() => setConfirmCallRow(a)}
+                      disabled={loading || !valid}
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      {loading ? <Spinner size="sm" className="mr-2" /> : null}
+                      Call
+                    </Button>
+                  );
+                })()}
               </div>
             </div>
           ))}
         </div>
       )}
+
+      <Dialog open={!!confirmDeleteId} onOpenChange={(o) => { if (!o) setConfirmDeleteId(null); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete agent?</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">This action cannot be undone.</p>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setConfirmDeleteId(null)} disabled={loading}>Cancel</Button>
+            <Button
+              variant="destructive"
+              onClick={async () => {
+                if (confirmDeleteId) {
+                  await handleDeleteAgent(confirmDeleteId);
+                  setConfirmDeleteId(null);
+                }
+              }}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Spinner size="sm" className="mr-2" />
+                  Deleting...
+                </>
+              ) : (
+                'Delete'
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirm Call */}
+      <Dialog open={!!confirmCallRow} onOpenChange={(o) => { if (!o) setConfirmCallRow(null); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Start call?</DialogTitle>
+          </DialogHeader>
+          {confirmCallRow ? (
+            <p className="text-sm text-muted-foreground">
+              Call {confirmCallRow.assistant?.name ?? 'agent'} at {destNumbers[confirmCallRow.agent_id] ?? ''}?
+            </p>
+          ) : null}
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setConfirmCallRow(null)} disabled={loading}>Cancel</Button>
+            <Button
+              className="bg-green-600 hover:bg-green-700"
+              onClick={async () => {
+                if (confirmCallRow) {
+                  await handleRowCall(confirmCallRow);
+                  setConfirmCallRow(null);
+                }
+              }}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Spinner size="sm" className="mr-2" />
+                  Calling...
+                </>
+              ) : (
+                'Call'
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent>
@@ -312,7 +413,7 @@ export default function AgentsPage() {
                 {loading ? (
                   <>
                     <Spinner size="sm" className="mr-2" />
-                    Saving…
+                    Saving...
                   </>
                 ) : (
                   'Save'
