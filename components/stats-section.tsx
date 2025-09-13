@@ -29,9 +29,9 @@ function useAnimatedNumber(target: number, durationMs = 1200, from = 0) {
 
 const stats: Stat[] = [
   { label: "Avg latency", value: 320, suffix: "ms" },
-  { label: "First call setup", value: 5, suffix: "min" },
+  { label: "Setup to first call", value: 5, suffix: "min" },
   { label: "Automated resolution", value: 82, suffix: "%" },
-  { label: "Languages", value: 40, suffix: "+" },
+  { label: "Numbers provisioned", value: 1, suffix: "+" },
 ]
 
 export function StatsSection() {
