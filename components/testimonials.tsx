@@ -1,5 +1,4 @@
-// Replaced shadcn Card with styled divs and Avatar with Radix Avatar
-import * as Avatar from "@radix-ui/react-avatar"
+import { Card, Avatar } from "@radix-ui/themes"
 
 const testimonials = [
   {
@@ -44,23 +43,14 @@ export function TestimonialsSection() {
         <div className="mx-auto mt-16 max-w-6xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-background border border-border rounded-xl">
+              <Card key={index} className="rounded-xl">
                 <div className="p-6">
-                  <blockquote className="text-foreground">"{testimonial.content}"</blockquote>
+                  <blockquote className="text-foreground">&quot;{testimonial.content}&quot;</blockquote>
                   <div className="mt-6 flex items-center space-x-3">
-                    <Avatar.Root className="inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle bg-muted">
-                      <Avatar.Image
-                        className="h-full w-full object-cover"
-                        src={testimonial.avatar || "/placeholder.svg"}
-                        alt={testimonial.author}
-                      />
-                      <Avatar.Fallback className="leading-1 flex h-full w-full items-center justify-center bg-muted text-foreground text-sm font-medium">
-                        {testimonial.author
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </Avatar.Fallback>
-                    </Avatar.Root>
+                    <Avatar size="3" radius="full" fallback={testimonial.author.split(" ").map((n) => n[0]).join("")}
+                      src={testimonial.avatar || "/placeholder.svg"}
+                      alt={testimonial.author}
+                    />
                     <div>
                       <div className="font-semibold text-foreground">{testimonial.author}</div>
                       <div className="text-sm text-muted-foreground">
@@ -69,7 +59,7 @@ export function TestimonialsSection() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
         </div>

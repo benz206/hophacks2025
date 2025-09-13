@@ -1,4 +1,6 @@
 
+import { Card } from "@radix-ui/themes"
+
 import { Brain, Zap, Shield, BarChart3, Globe, Clock } from "lucide-react"
 
 const features = [
@@ -50,10 +52,7 @@ export function FeaturesSection() {
         <div className="mx-auto mt-16 max-w-6xl">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
-              <div
-                key={feature.title}
-                className="relative overflow-hidden border border-border bg-card hover:shadow-lg transition-shadow rounded-xl"
-              >
+              <Card key={feature.title} className="hover:shadow-lg transition-shadow rounded-xl">
                 <div className="p-6">
                   <div className="flex items-center space-x-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10">
@@ -65,7 +64,7 @@ export function FeaturesSection() {
                 <div className="px-6 pb-6">
                   <p className="text-muted-foreground">{feature.description}</p>
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
         </div>
