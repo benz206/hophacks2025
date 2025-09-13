@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useThemeAppearance } from "@/components/theme-provider";
+import { HeroBackground } from "@/components/hero-background";
+import { Eye, EyeOff, Github, Lock, Mail, CheckCircle2 } from "lucide-react";
 
 type AuthTab = "signin" | "signup" | "magic";
 
@@ -20,8 +22,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
-  async function signInWithOAuth(provider: "google") {
+  async function signInWithOAuth(provider: "google" | "github") {
     setLoading(true);
     setMessage(null);
     try {
@@ -83,8 +86,38 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground">
-      <div className="container mx-auto flex min-h-[100dvh] flex-col items-center justify-center px-4">
-        <div className="mx-auto w-full max-w-md">
+      <div className="relative">
+        <HeroBackground />
+        <div className="container mx-auto px-4 py-10">
+          <div className="grid min-h-[80dvh] items-center gap-10 lg:grid-cols-2">
+            <div className="hidden lg:block">
+              <div className="mx-auto max-w-lg">
+                <div className="inline-flex items-center rounded-full border border-border bg-background/70 px-3 py-1 text-xs">
+                  <span className="text-muted-foreground">Welcome back</span>
+                </div>
+                <h1 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+                  Sign in and get building
+                </h1>
+                <p className="mt-3 text-base text-muted-foreground">
+                  Access your dashboard to create agents, provision numbers, and track live calls.
+                </p>
+                <ul className="mt-6 space-y-3">
+                  <li className="flex items-start gap-2 text-sm text-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5" aria-hidden="true" />
+                    <span>Realtime analytics and transcripts</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-sm text-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5" aria-hidden="true" />
+                    <span>Sub‑second latency, production‑ready</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-sm text-foreground">
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5" aria-hidden="true" />
+                    <span>Secure by default with SOC 2 practices</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="mx-auto w-full max-w-md">
 
           <Card className="border-border/70 bg-card text-card-foreground shadow-sm">
             <CardHeader>
@@ -128,14 +161,23 @@ export default function LoginPage() {
                     <form onSubmit={onSubmitPassword} className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="email">Email</Label>
-                        <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                        <div className="relative">
+                          <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required className="pl-9" />
+                          <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+                        </div>
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="password">Password</Label>
-                        <Input id="password" type="password" placeholder="Your password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                        <div className="relative">
+                          <Input id="password" type={showPassword ? "text" : "password"} placeholder="Your password" value={password} onChange={(e) => setPassword(e.target.value)} required className="pl-9 pr-9" />
+                          <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+                          <button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((v) => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground hover:text-foreground">
+                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </button>
+                        </div>
                       </div>
-                      <Button type="submit" className={`w-full ${isDark ? "bg-white text-black hover:bg-white/90" : "bg-black text-white hover:bg-black/90"}`} disabled={loading}>
-                        Sign in
+                      <Button type="submit" className={`w-full ${isDark ? "bg-white text-black hover:bg-white/90" : "bg-black text-white hover:bg-black/90"}`} disabled={loading} aria-busy={loading}>
+                        {loading ? "Please wait…" : "Sign in"}
                       </Button>
                     </form>
                   </div>
@@ -144,14 +186,23 @@ export default function LoginPage() {
                     <form onSubmit={onSubmitPassword} className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="email">Email</Label>
-                        <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                        <div className="relative">
+                          <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required className="pl-9" />
+                          <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+                        </div>
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="password">Password</Label>
-                        <Input id="password" type="password" placeholder="Your password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                        <div className="relative">
+                          <Input id="password" type={showPassword ? "text" : "password"} placeholder="Your password" value={password} onChange={(e) => setPassword(e.target.value)} required className="pl-9 pr-9" />
+                          <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+                          <button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((v) => !v)} className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground hover:text-foreground">
+                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </button>
+                        </div>
                       </div>
-                      <Button type="submit" className={`w-full ${isDark ? "bg-white text-black hover:bg-white/90" : "bg-black text-white hover:bg-black/90"}`} disabled={loading}>
-                        Create account
+                      <Button type="submit" className={`w-full ${isDark ? "bg-white text-black hover:bg-white/90" : "bg-black text-white hover:bg-black/90"}`} disabled={loading} aria-busy={loading}>
+                        {loading ? "Creating…" : "Create account"}
                       </Button>
                     </form>
                   </div>
@@ -160,10 +211,13 @@ export default function LoginPage() {
                     <form onSubmit={onSubmitMagic} className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="email">Email</Label>
-                        <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                        <div className="relative">
+                          <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required className="pl-9" />
+                          <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+                        </div>
                       </div>
-                      <Button type="submit" className={`w-full ${isDark ? "bg-white text-black hover:bg-white/90" : "bg-black text-white hover:bg-black/90"}`} disabled={loading}>
-                        Send magic link
+                      <Button type="submit" className={`w-full ${isDark ? "bg-white text-black hover:bg-white/90" : "bg-black text-white hover:bg-black/90"}`} disabled={loading} aria-busy={loading}>
+                        {loading ? "Sending…" : "Send magic link"}
                       </Button>
                     </form>
                   </div>
@@ -179,11 +233,21 @@ export default function LoginPage() {
               <div className="grid gap-3">
                 <Button
                   variant="outline"
-                  className={`w-full ${isDark ? "border-neutral-800 bg-background text-foreground hover:bg-neutral-900" : "border-neutral-200 bg-background text-foreground hover:bg-neutral-50"}`}
+                  className={`w-full justify-start ${isDark ? "border-neutral-800 bg-background text-foreground hover:bg-neutral-900" : "border-neutral-200 bg-background text-foreground hover:bg-neutral-50"}`}
                   disabled={loading}
                   onClick={() => signInWithOAuth("google")}
                 >
+                  <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-sm bg-muted text-xs">G</span>
                   Continue with Google
+                </Button>
+                <Button
+                  variant="outline"
+                  className={`w-full justify-start ${isDark ? "border-neutral-800 bg-background text-foreground hover:bg-neutral-900" : "border-neutral-200 bg-background text-foreground hover:bg-neutral-50"}`}
+                  disabled={loading}
+                  onClick={() => signInWithOAuth("github")}
+                >
+                  <Github className="mr-2 h-4 w-4" aria-hidden="true" />
+                  Continue with GitHub
                 </Button>
               </div>
 
@@ -194,6 +258,8 @@ export default function LoginPage() {
           <p className="mt-6 text-center text-xs text-muted-foreground">
             By continuing, you agree to our <a className="underline underline-offset-4" href="/terms">Terms</a> and <a className="underline underline-offset-4" href="/privacy">Privacy Policy</a>.
           </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
