@@ -5,6 +5,8 @@ import { Call } from "@/lib/fake-data";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { Spinner } from "@/components/ui/spinner";
+import { Button } from "@/components/ui/button";
+import { ExternalLink } from "lucide-react";
 
 type CallsTableProps = {
   calls: Call[];
@@ -248,14 +250,21 @@ export function CallsTable({ calls }: CallsTableProps) {
                 {selectedCall.recordingUrl && (
                   <div className="border-t pt-3">
                     <h4 className="font-medium mb-2">Recordings</h4>
-                    <div className="space-y-2">
-                      <a href={selectedCall.recordingUrl} className="text-primary underline text-xs block" target="_blank" rel="noreferrer">
-                        📹 Mono Recording
-                      </a>
-                      {(selectedCall as any).vapiData?.stereoRecordingUrl && (
-                        <a href={(selectedCall as any).vapiData.stereoRecordingUrl} className="text-primary underline text-xs block" target="_blank" rel="noreferrer">
-                          🎧 Stereo Recording
+                    <div className="flex flex-wrap gap-3 pt-1">
+                      
+                      <Button asChild size="sm" variant="outline">
+                        <a href={selectedCall.recordingUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center">
+                          <span>📹 Mono Recording</span>
+                          <ExternalLink className="ml-2 h-3.5 w-3.5" aria-hidden="true" />
                         </a>
+                      </Button>
+                      {(selectedCall as any).vapiData?.stereoRecordingUrl && (
+                        <Button asChild size="sm" variant="outline">
+                          <a href={(selectedCall as any).vapiData.stereoRecordingUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center">
+                            <span>🎧 Stereo Recording</span>
+                            <ExternalLink className="ml-2 h-3.5 w-3.5" aria-hidden="true" />
+                          </a>
+                        </Button>
                       )}
                     </div>
                   </div>

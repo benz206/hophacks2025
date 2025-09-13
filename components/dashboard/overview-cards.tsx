@@ -58,10 +58,10 @@ export function UsageChart({ data }: { data: UsagePoint[] }) {
             <Recharts.XAxis dataKey="date" tickLine={false} axisLine={false} minTickGap={24} />
             <Recharts.YAxis tickLine={false} axisLine={false} width={28} />
             <Recharts.Tooltip contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }} />
-            <Recharts.Area type="monotone" dataKey="calls" stroke="hsl(var(--primary))" fill="url(#areaCalls)" strokeWidth={2} />
-            <Recharts.Line type="monotone" dataKey="calls" stroke="hsl(var(--primary))" strokeWidth={2} strokeOpacity={0.85} dot={false} activeDot={{ r: 3.5 }} />
-            <Recharts.Area type="monotone" dataKey="minutes" stroke="hsl(var(--muted-foreground))" fill="url(#areaMinutes)" strokeWidth={1.5} />
-            <Recharts.Line type="monotone" dataKey="minutes" stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" strokeWidth={1.5} strokeOpacity={0.6} dot={false} activeDot={{ r: 3 }} />
+            <Recharts.Area type="monotone" dataKey="calls" stroke="hsl(var(--primary))" fill="url(#areaCalls)" strokeWidth={2.25} />
+            <Recharts.Line type="monotone" dataKey="calls" stroke="hsl(var(--primary))" strokeWidth={3} strokeOpacity={1} dot={false} activeDot={{ r: 3.5 }} />
+            <Recharts.Area type="monotone" dataKey="minutes" stroke="hsl(var(--foreground))" fill="url(#areaMinutes)" strokeWidth={2} />
+            <Recharts.Line type="monotone" dataKey="minutes" stroke="hsl(var(--foreground))" strokeWidth={2.5} strokeOpacity={0.95} dot={false} activeDot={{ r: 3.25 }} />
           </Recharts.AreaChart>
         </Recharts.ResponsiveContainer>
       </CardContent>
