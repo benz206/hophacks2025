@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Home, Bot, Phone, LogOut, Phone as PhoneIcon } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import Image from "next/image";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const supabase = await getSupabaseServerClient();
@@ -31,13 +32,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-[220px_1fr]">
       <aside className="border-r bg-muted/10 px-3 py-4 hidden md:flex md:flex-col">
-        <Link href="/" className="px-2 py-1 flex items-center gap-2 group">
-          <div className="flex items-center justify-center w-10 h-10 rounded-md bg-foreground text-background transition-transform group-hover:-translate-y-0.5">
-            <PhoneIcon className="h-5 w-5" aria-hidden="true" strokeWidth={1.75} />
-          </div>
-          <span className="text-lg font-semibold tracking-tight">Cogent</span>
-        </Link>
-        <div className="mt-2 flex justify-end">
+        <div className="mt-2 flex justify-between">
+          <Link href="/" className="px-2 py-1 flex items-center gap-2 group">
+            <Image src="/logo.png" alt="Hermes." width={32} height={32} />
+            <span className="text-lg font-semibold tracking-tight">Hermes</span>
+          </Link>
           <ThemeToggle />
         </div>
         <nav className="mt-2 grid gap-1">
