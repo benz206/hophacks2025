@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
 import { Brain, Zap, Shield, BarChart3, Globe, Clock } from "lucide-react"
 
 const features = [
@@ -50,22 +50,22 @@ export function FeaturesSection() {
         <div className="mx-auto mt-16 max-w-6xl">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
-              <Card
+              <div
                 key={feature.title}
-                className="relative overflow-hidden border-border bg-card hover:shadow-lg transition-shadow"
+                className="relative overflow-hidden border border-border bg-card hover:shadow-lg transition-shadow rounded-xl"
               >
-                <CardHeader>
+                <div className="p-6">
                   <div className="flex items-center space-x-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10">
                       <feature.icon className="h-5 w-5 text-accent" />
                     </div>
-                    <CardTitle className="text-lg">{feature.title}</CardTitle>
+                    <div className="text-lg font-semibold">{feature.title}</div>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-muted-foreground">{feature.description}</CardDescription>
-                </CardContent>
-              </Card>
+                </div>
+                <div className="px-6 pb-6">
+                  <p className="text-muted-foreground">{feature.description}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>

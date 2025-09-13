@@ -1,5 +1,5 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+// Replaced shadcn Card with styled divs and Avatar with Radix Avatar
+import * as Avatar from "@radix-ui/react-avatar"
 
 const testimonials = [
   {
@@ -44,19 +44,23 @@ export function TestimonialsSection() {
         <div className="mx-auto mt-16 max-w-6xl">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="bg-background border-border">
-                <CardContent className="p-6">
+              <div key={index} className="bg-background border border-border rounded-xl">
+                <div className="p-6">
                   <blockquote className="text-foreground">"{testimonial.content}"</blockquote>
                   <div className="mt-6 flex items-center space-x-3">
-                    <Avatar>
-                      <AvatarImage src={testimonial.avatar || "/placeholder.svg"} alt={testimonial.author} />
-                      <AvatarFallback>
+                    <Avatar.Root className="inline-flex h-10 w-10 select-none items-center justify-center overflow-hidden rounded-full align-middle bg-muted">
+                      <Avatar.Image
+                        className="h-full w-full object-cover"
+                        src={testimonial.avatar || "/placeholder.svg"}
+                        alt={testimonial.author}
+                      />
+                      <Avatar.Fallback className="leading-1 flex h-full w-full items-center justify-center bg-muted text-foreground text-sm font-medium">
                         {testimonial.author
                           .split(" ")
                           .map((n) => n[0])
                           .join("")}
-                      </AvatarFallback>
-                    </Avatar>
+                      </Avatar.Fallback>
+                    </Avatar.Root>
                     <div>
                       <div className="font-semibold text-foreground">{testimonial.author}</div>
                       <div className="text-sm text-muted-foreground">
@@ -64,8 +68,8 @@ export function TestimonialsSection() {
                       </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
         </div>

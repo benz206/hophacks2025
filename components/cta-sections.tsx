@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+// Replaced shadcn Button with native buttons
 import { ArrowRight } from "lucide-react";
 
 export function CTASection() {
@@ -14,13 +14,13 @@ export function CTASection() {
             with our simple API.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
+            <button className="h-10 md:h-11 px-4 md:px-6 rounded-md bg-accent text-accent-foreground hover:bg-accent/90 inline-flex items-center text-sm md:text-base">
               Start Free Trial
               <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="lg">
+            </button>
+            <button className="h-10 md:h-11 px-4 md:px-6 rounded-md border border-border bg-background hover:bg-accent/5 inline-flex items-center text-sm md:text-base">
               Schedule Demo
-            </Button>
+            </button>
           </div>
 
           <div className="mt-8 text-sm text-muted-foreground">

@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button"
 import { Phone, Menu } from "lucide-react"
 
 export function Header() {
@@ -37,15 +36,25 @@ export function Header() {
         </nav>
 
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="sm" className="hidden md:inline-flex">
+          <button
+            className="hidden md:inline-flex h-9 px-3 rounded-md border border-transparent bg-transparent text-foreground hover:bg-accent/10 text-sm"
+            type="button"
+          >
             Log in
-          </Button>
-          <Button size="sm" className="bg-accent text-accent-foreground hover:bg-accent/90">
+          </button>
+          <button
+            className="h-9 px-3 rounded-md bg-accent text-accent-foreground hover:bg-accent/90 text-sm"
+            type="button"
+          >
             Get Started
-          </Button>
-          <Button variant="ghost" size="sm" className="md:hidden">
+          </button>
+          <button
+            className="md:hidden h-9 w-9 inline-flex items-center justify-center rounded-md hover:bg-accent/10"
+            type="button"
+            aria-label="Open menu"
+          >
             <Menu className="h-4 w-4" />
-          </Button>
+          </button>
         </div>
       </div>
     </header>
