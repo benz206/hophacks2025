@@ -1,6 +1,7 @@
 "use client"
 
 import { Card } from "@/components/ui/card"
+import { AmbientGradient } from "@/components/ambient-gradient"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 
 const testimonials = [
@@ -49,8 +50,15 @@ export function TestimonialsSection() {
               const avatarUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(
                 testimonial.author,
               )}`
+              const seeds = [
+                "testi-aurora",
+                "testi-grape",
+                "testi-mint",
+              ] as const
+              const seed = seeds[index] ?? `testimonial-${index}`
               return (
-                <Card key={index} className="rounded-xl border border-border shadow-none">
+                <Card key={index} className="relative overflow-hidden rounded-xl border border-border shadow-none">
+                  <AmbientGradient seed={seed} />
                   <div className="p-5">
                     <blockquote className="text-sm sm:text-base text-foreground">&quot;{testimonial.content}&quot;</blockquote>
                     <div className="mt-5 flex items-center gap-3">

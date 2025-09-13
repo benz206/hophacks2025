@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card"
+import { AmbientGradient } from "@/components/ambient-gradient"
 
 export function ShowcaseSection() {
   return (
@@ -14,7 +15,8 @@ export function ShowcaseSection() {
         </div>
 
         <div className="mx-auto mt-14 grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-3">
-          <Card className="rounded-xl border border-border shadow-none lg:col-span-2">
+          <Card className="rounded-xl border border-border shadow-none lg:col-span-2 relative overflow-hidden">
+            <AmbientGradient seed="showcase-main" />
             <div className="p-5">
               <div className="text-xs text-muted-foreground mb-3">Live Transcript</div>
               <div className="space-y-3 text-sm">

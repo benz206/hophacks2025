@@ -7,6 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
+type AgentMetadata = { name?: string; firstmessage?: string; systemprompt?: string }
+type Assistant = { name: string; firstMessage?: string }
+type Agent = { id: string; agent_id: string; metadata?: AgentMetadata; assistant?: Assistant; assistantError?: string }
+
 export default function AgentsPage() {
   const [name, setName] = useState("");
   const [firstmessage, setFirstMessage] = useState("");
@@ -16,7 +20,7 @@ export default function AgentsPage() {
   const [customerNumber, setCustomerNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
-  const [agents, setAgents] = useState<Array<any>>([]);
+  const [agents, setAgents] = useState<Agent[]>([]);
   const [callNumbers, setCallNumbers] = useState<Record<string, string>>({});
   const [createOpen, setCreateOpen] = useState(false);
 
@@ -32,7 +36,7 @@ export default function AgentsPage() {
       if (!res.ok) throw new Error('Failed to fetch agents');
       const data = await res.json();
       setAgents(data.agents || []);
-    } catch (err) {
+    } catch {
       // ignore list error in UI status; keep page functional
     }
   }

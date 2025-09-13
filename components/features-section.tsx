@@ -1,5 +1,6 @@
 
 import { Card } from "@/components/ui/card"
+import { AmbientGradient } from "@/components/ambient-gradient"
 
 import { Brain, Zap, Shield, BarChart3, Globe, Clock } from "lucide-react"
 
@@ -51,8 +52,19 @@ export function FeaturesSection() {
 
         <div className="mx-auto mt-14 max-w-6xl">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature) => (
-              <Card key={feature.title} className="rounded-xl border border-border shadow-none hover:shadow-sm transition-shadow">
+            {features.map((feature, idx) => {
+              const seeds = [
+                "feature-rose",
+                "feature-lagoon",
+                "feature-sunset",
+                "feature-aurora",
+                "feature-mint",
+                "feature-dusk",
+              ] as const
+              const seed = seeds[idx] ?? `feature-${idx}`
+              return (
+              <Card key={feature.title} className="relative overflow-hidden rounded-xl border border-border shadow-none hover:shadow-sm transition-shadow">
+                <AmbientGradient seed={seed} />
                 <div className="p-5">
                   <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-md bg-accent/30 border border-border">
@@ -65,7 +77,8 @@ export function FeaturesSection() {
                   <p className="text-sm text-muted-foreground">{feature.description}</p>
                 </div>
               </Card>
-            ))}
+              )
+            })}
           </div>
         </div>
       </div>
