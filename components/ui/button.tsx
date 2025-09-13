@@ -1,19 +1,5 @@
 import * as React from "react"
-// Local Slot replacement to support `asChild` without Radix
-type AnyElement = React.JSXElementConstructor<unknown> | keyof JSX.IntrinsicElements
-type SlotChild = React.ReactElement<unknown, AnyElement>
-type SlotProps = { children: SlotChild; className?: string } & React.HTMLAttributes<HTMLElement>
-
-const Slot = React.forwardRef<HTMLElement, SlotProps>(({ children, className, ...props }, ref) => {
-  if (!React.isValidElement(children)) return null as unknown as JSX.Element
-  const childProps = children.props as { className?: string }
-  return React.cloneElement(children, {
-    ...props,
-    ref,
-    className: cn(childProps?.className, className),
-  } as unknown)
-})
-Slot.displayName = "Slot"
+import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
