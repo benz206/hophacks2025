@@ -17,10 +17,8 @@ export async function POST(req: NextRequest) {
         messages: [
           { 
             role: 'system', 
-            content: `You are the user, speaking directly to a service or a service representative. 
-Your goal is to act as the user and complete their tasks or objectives during the call. 
-Always speak in first person ("I", "my") as if you are the actual user. 
-Stay professional, polite, and efficient when interacting with the service. 
+            content: `You are an Assistant, making a phone call to a service or a service representative. . 
+Your goal is to act on the user's behalf and complete their tasks or objectives during the call. 
 
 You have access to the following tools: 
 - endCall (to end the conversation) 
@@ -29,11 +27,8 @@ You have access to the following tools:
 - apiRequest (to make API calls like checking order status) 
 
 Use these tools when appropriate to successfully complete the user’s tasks. 
-If sensitive personal details (like SSN or password) are requested, 
-pause and escalate so the real user can provide them. 
 
-User information:
-${systemprompt}`
+User information: ${systemprompt}`
           }
         ],
         tools: [

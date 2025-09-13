@@ -1,14 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET() {
   try {
     const supabase = await getSupabaseServerClient();
-    const { phoneNumber }: { phoneNumber?: string } = await req.json();
-
     const {
       data: { user },
       error: userError
@@ -21,18 +16,16 @@ export async function PATCH(
     }
 
     const { data, error } = await supabase
-      .from('agents')
-      .update({ phone_number: phoneNumber })
-      .eq('id', params.id)
-      .eq('user_id', user.id)
+      .from('calls')
       .select('*')
-      .single();
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    return NextResponse.json({ agent: data }, { status: 200 });
+    return NextResponse.json({ calls: data || [] }, { status: 200 });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json({ error: message }, { status: 500 });
