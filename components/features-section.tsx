@@ -56,7 +56,7 @@ export function FeaturesSection() {
                 <div className="p-5">
                   <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-md bg-accent/10">
-                      <feature.icon className="h-5 w-5 text-accent" />
+                      <feature.icon className="h-5 w-5 text-accent" aria-hidden="true" strokeWidth={1.75} />
                     </div>
                     <div className="text-base font-medium">{feature.title}</div>
                   </div>
