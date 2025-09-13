@@ -59,22 +59,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </div>
       </aside>
       <div className="flex flex-col min-h-screen">
-        <header className="border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 py-3 flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">Dashboard</div>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <div className="md:hidden">
-              <form action={async () => {
-                'use server'
-                const supabase = await getSupabaseServerClient();
-                await supabase.auth.signOut();
-                redirect('/');
-              }}>
-                <Button variant="outline" size="sm">Sign out</Button>
-              </form>
-            </div>
-          </div>
-        </header>
         <main className="p-4">{children}</main>
       </div>
     </div>
