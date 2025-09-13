@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil, Trash2, Phone } from 'lucide-react';
 
 type AgentRow = {
   id: string;
@@ -382,8 +382,8 @@ export default function AgentsPage() {
                       aria-label={canCall ? "Call" : "Enter a valid destination number"}
                       title={canCall ? "Call" : "Enter a valid destination number"}
                     >
-                      {loading ? <Spinner size="sm" className="mr-1" /> : null}
-                      Call
+                      {loading ? <Spinner size="sm" className="mr-1" /> : <Phone className="mr-1.5 h-4 w-4" aria-hidden="true" />}
+                      <span>Call</span>
                     </Button>
                   </div>
                 </div>
@@ -493,7 +493,10 @@ export default function AgentsPage() {
                   Calling...
                 </>
               ) : (
-                'Call'
+                <>
+                  <Phone className="mr-2 h-4 w-4" aria-hidden="true" />
+                  Call
+                </>
               )}
             </Button>
           </div>
