@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Play } from "lucide-react"
 import Link from "next/link"
+import { ElectricWire } from "@/components/electric-wire"
 
 export function HeroSection() {
   return (
@@ -14,7 +15,7 @@ export function HeroSection() {
           </div>
 
           <h1 className="text-4xl font-semibold tracking-tight sm:text-6xl text-balance">
-            Voice agents that <span className="bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">handle calls</span> like humans
+            Voice agents that <span className="text-gradient">handle calls</span> like humans
           </h1>
 
           <p className="mt-5 text-base sm:text-lg leading-7 text-muted-foreground max-w-2xl mx-auto text-pretty">
@@ -25,16 +26,21 @@ export function HeroSection() {
             <Button className="px-5" asChild>
               <Link href="/dashboard">
                 Start Building
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" strokeWidth={1.75} />
               </Link>
             </Button>
             <Button variant="ghost" asChild>
               <Link href="/demo">
-                <Play className="mr-2 h-4 w-4" />
+                <Play className="mr-2 h-4 w-4" aria-hidden="true" strokeWidth={1.75} />
                 Watch Demo
               </Link>
             </Button>
           </div>
+
+          {/* Decorative electric wire */}
+          {/* <div className="mt-10 hidden sm:block">
+            <ElectricWire />
+          </div> */}
 
           {/* Hero visual */}
           <div className="mt-14 relative">

@@ -3,6 +3,7 @@ import { FeaturesSection } from "@/components/features-section"
 import { TestimonialsSection } from "@/components/testimonials"
 import { CTASection } from "@/components/cta-sections"
 import { Footer } from "@/components/footer"
+import { Steps } from "@/components/steps"
 
 export default function HomePage() {
   return (
@@ -10,6 +11,7 @@ export default function HomePage() {
       <main>
         <HeroSection />
         <FeaturesSection />
+        <Steps />
         <TestimonialsSection />
         <CTASection />
       </main>

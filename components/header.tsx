@@ -9,7 +9,7 @@ export function Header() {
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <div className="flex items-center justify-center w-7 h-7 bg-foreground text-background rounded-md">
-            <Phone className="h-3.5 w-3.5" />
+            <Phone className="h-3.5 w-3.5" aria-hidden="true" strokeWidth={1.75} />
           </div>
           <span className="text-base font-semibold tracking-tight">Cogent</span>
         </div>

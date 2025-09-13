@@ -16,9 +16,9 @@ export function ThemeToggle() {
       onClick={toggleAppearance}
    >
       {appearance === "dark" ? (
-        <Moon className="h-4 w-4" />
+        <Moon className="h-4 w-4" aria-hidden="true" strokeWidth={1.75} />
       ) : (
-        <Sun className="h-4 w-4" />
+        <Sun className="h-4 w-4" aria-hidden="true" strokeWidth={1.75} />
       )}
       <span className="sr-only">Toggle theme</span>
     </Button>
