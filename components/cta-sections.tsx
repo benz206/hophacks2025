@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export function CTASection() {
   return (
@@ -14,12 +15,14 @@ export function CTASection() {
             with our simple API.
           </p>
           <div className="mt-8 flex items-center justify-center gap-x-3">
-            <Button className="inline-flex items-center">
-              Start Free Trial
-              <ArrowRight className="ml-2 h-4 w-4" />
+            <Button className="inline-flex items-center" asChild>
+              <Link href="/pricing">
+                Start Free Trial
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
-            <Button variant="ghost" className="inline-flex items-center">
-              Schedule Demo
+            <Button variant="ghost" className="inline-flex items-center" asChild>
+              <Link href="/demo">Schedule Demo</Link>
             </Button>
           </div>
 

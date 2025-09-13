@@ -1,10 +1,11 @@
 import { Phone } from "lucide-react"
+import Link from "next/link"
 
 export function Footer() {
   return (
     <footer className="border-t border-border bg-muted/10">
       <div className="container mx-auto px-4 py-10">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           <div className="lg:col-span-1">
             <div className="flex items-center gap-2">
               <div className="flex items-center justify-center w-7 h-7 bg-foreground text-background rounded-md">
@@ -21,76 +22,24 @@ export function Footer() {
             <h3 className="text-xs font-medium text-foreground">Product</h3>
             <ul className="mt-3 space-y-2">
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
+                <Link href="#features" className="text-sm text-muted-foreground hover:text-foreground">
                   Features
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
+                <Link href="/pricing" className="text-sm text-muted-foreground hover:text-foreground">
                   Pricing
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
+                <Link href="/docs/api" className="text-sm text-muted-foreground hover:text-foreground">
                   API
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
+                <Link href="/docs" className="text-sm text-muted-foreground hover:text-foreground">
                   Documentation
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-xs font-medium text-foreground">Company</h3>
-            <ul className="mt-3 space-y-2">
-              <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
-                  About
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
-                  Careers
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
-                  Contact
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-xs font-medium text-foreground">Legal</h3>
-            <ul className="mt-3 space-y-2">
-              <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
-                  Privacy
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
-                  Terms
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
-                  Security
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
-                  Compliance
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
