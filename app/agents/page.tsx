@@ -3,22 +3,35 @@
 import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+
+type AssistantSummary = {
+  name?: string;
+  firstMessage?: string;
+} | null;
+
+type AgentRow = {
+  id: string;
+  agent_id: string;
+  assistant?: AssistantSummary;
+  assistantError?: string;
+};
 
 export default function AgentsPage() {
   const [name, setName] = useState("");
   const [firstmessage, setFirstMessage] = useState("");
   const [systemprompt, setSystemPrompt] = useState("");
-  const [assistantId, setAssistantId] = useState<string | null>(null);
-  const [phoneNumberId, setPhoneNumberId] = useState("");
-  const [customerNumber, setCustomerNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
-  const [agents, setAgents] = useState<Array<any>>([]);
-  const [callNumbers, setCallNumbers] = useState<Record<string, string>>({});
+  const [agents, setAgents] = useState<AgentRow[]>([]);
   const [createOpen, setCreateOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editing, setEditing] = useState<AgentRow | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editFirst, setEditFirst] = useState("");
+  const [editSystem, setEditSystem] = useState("");
+  const [destNumbers, setDestNumbers] = useState<Record<string, string>>({});
 
   function resetCreateForm() {
     setName("");
@@ -32,7 +45,7 @@ export default function AgentsPage() {
       if (!res.ok) throw new Error('Failed to fetch agents');
       const data = await res.json();
       setAgents(data.agents || []);
-    } catch (err) {
+    } catch {
       // ignore list error in UI status; keep page functional
     }
   }
@@ -69,13 +82,12 @@ export default function AgentsPage() {
       });
       if (!resAssistant.ok) throw new Error('Failed to create assistant');
       const { assistant } = await resAssistant.json();
-      setAssistantId(assistant.id);
 
       // 2) Save to Supabase
       const resSave = await fetch('/api/agents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ agentId: assistant.id, metadata: { name, firstmessage, systemprompt } })
+        body: JSON.stringify({ agentId: assistant.id })
       });
       if (!resSave.ok) throw new Error('Failed to save agent');
 
@@ -92,46 +104,9 @@ export default function AgentsPage() {
     }
   }
 
-  async function handlePatchPhoneNumber() {
-    if (!assistantId || !phoneNumberId) return;
-    setLoading(true);
-    setStatus(null);
-    try {
-      const res = await fetch(`/api/vapi/phone-number/${phoneNumberId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ assistantId })
-      });
-      if (!res.ok) throw new Error('Failed to patch phone number');
-      setStatus('Phone number patched to assistant.');
-    } catch (err) {
-      setStatus(err instanceof Error ? err.message : 'Unknown error');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleCall() {
-    if (!assistantId || !customerNumber) return;
-    setLoading(true);
-    setStatus(null);
-    try {
-      const res = await fetch('/api/vapi/calls', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ assistantId, customerNumber })
-      });
-      if (!res.ok) throw new Error('Failed to create call');
-      setStatus('Outbound call created.');
-    } catch (err) {
-      setStatus(err instanceof Error ? err.message : 'Unknown error');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleRowCall(agentId: string) {
-    const number = callNumbers[agentId];
+  async function handleRowCall(row: AgentRow) {
+    const agentId = row.agent_id;
+    const number = destNumbers[row.agent_id];
     if (!agentId || !number) return;
     setLoading(true);
     setStatus(null);
@@ -147,6 +122,61 @@ export default function AgentsPage() {
       setStatus(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleRowUpdate(row: AgentRow) {
+    const body: { name?: string; firstmessage?: string; systemprompt?: string } = {
+      name: editName,
+      firstmessage: editFirst,
+      systemprompt: editSystem,
+    };
+    setLoading(true);
+    setStatus(null);
+    try {
+      const res = await fetch(`/api/vapi/assistants/${row.agent_id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error('Failed to update agent');
+      setStatus('Agent updated.');
+      await loadAgents();
+      setEditOpen(false);
+    } catch (err) {
+      setStatus(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function openEdit(row: AgentRow) {
+    try {
+      setEditing(row);
+      const res = await fetch(`/api/vapi/assistants/${row.agent_id}`);
+      if (res.ok) {
+        const { assistant } = (await res.json()) as {
+          assistant?: {
+            name?: string;
+            firstMessage?: string;
+            model?: { messages?: Array<{ role?: string; content?: string }> };
+          };
+        };
+        setEditName(assistant?.name ?? "");
+        setEditFirst(assistant?.firstMessage ?? "");
+        const systemMsg = assistant?.model?.messages?.find((m) => m?.role === 'system');
+        setEditSystem(systemMsg?.content ?? "");
+      } else {
+        setEditName("");
+        setEditFirst("");
+        setEditSystem("");
+      }
+      setEditOpen(true);
+    } catch {
+      setEditName("");
+      setEditFirst("");
+      setEditSystem("");
+      setEditOpen(true);
     }
   }
 
@@ -184,81 +214,76 @@ export default function AgentsPage() {
         </Dialog>
       </div>
 
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Your agents</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {agents.length === 0 ? (
-            <div className="text-sm text-muted-foreground">No agents yet.</div>
-          ) : (
-            <div className="grid gap-3">
-              {agents.map((a) => (
-                <div key={a.id} className="rounded-lg border p-3">
-                  <div className="font-medium">{a?.metadata?.name ?? 'Untitled'}</div>
-                  <div className="text-xs text-muted-foreground">Agent ID: {a.agent_id}</div>
-                  <div className="mt-2">
-                    <Button variant="outline" size="sm" onClick={() => handleDeleteAgent(a.id)} disabled={loading}>Delete</Button>
+      {agents.length === 0 ? (
+        <div className="text-sm text-muted-foreground">No agents yet.</div>
+      ) : (
+        <div className="grid gap-3">
+          {agents.map((a) => (
+            <div key={a.id} className="rounded-lg border bg-card p-4 shadow-sm">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 space-y-3">
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground">{a.assistant?.name ?? 'Untitled'}</h3>
                   </div>
-                  {a.assistant ? (
-                    <div className="mt-1 text-sm">
-                      <div>Vapi Assistant: {a.assistant.name}</div>
-                      {a.assistant.firstMessage && (
-                        <div className="text-muted-foreground">First: {a.assistant.firstMessage}</div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="mt-1 text-sm text-red-600">
-                      Unable to load Vapi assistant{a.assistantError ? `: ${a.assistantError}` : ''}
-                    </div>
-                  )}
-                  <div className="mt-3 flex items-end gap-2">
-                    <div className="flex-1 grid gap-1.5">
-                      <Label htmlFor={`customer-${a.id}`}>Customer Number</Label>
-                      <Input
-                        id={`customer-${a.id}`}
-                        placeholder="+1234567890"
-                        value={callNumbers[a.agent_id] ?? ''}
-                        onChange={(e) => setCallNumbers((prev) => ({ ...prev, [a.agent_id]: e.target.value }))}
-                      />
-                    </div>
-                    <Button onClick={() => handleRowCall(a.agent_id)} disabled={loading || !callNumbers[a.agent_id]}>Call</Button>
+                  <div className="space-y-2">
+                    <Label htmlFor={`dest-${a.id}`} className="text-sm font-medium">Destination Number</Label>
+                    <Input 
+                      id={`dest-${a.id}`} 
+                      placeholder="+1234567890" 
+                      value={destNumbers[a.agent_id] ?? ''} 
+                      onChange={(e) => setDestNumbers((prev) => ({ ...prev, [a.agent_id]: e.target.value }))}
+                      className="w-full max-w-xs"
+                    />
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {assistantId && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Actions</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-3">
-            <div className="text-sm">Assistant ID: {assistantId}</div>
-            <div className="flex gap-2 items-end">
-              <div className="flex-1 grid gap-1.5">
-                <Label htmlFor="phoneId">Phone Number ID</Label>
-                <Input id="phoneId" placeholder="phn_..." value={phoneNumberId} onChange={(e) => setPhoneNumberId(e.target.value)} />
+                <div className="flex flex-col gap-2">
+                  <Button variant="outline" size="sm" onClick={() => handleDeleteAgent(a.id)} disabled={loading}>
+                    Delete
+                  </Button>
+                  <Button variant="secondary" size="sm" onClick={() => openEdit(a)} disabled={loading}>
+                    Edit
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    onClick={() => handleRowCall(a)} 
+                    disabled={loading || !destNumbers[a.agent_id]}
+                    className="bg-green-600 hover:bg-green-700"
+                  >
+                    Call
+                  </Button>
+                </div>
               </div>
-              <Button onClick={handlePatchPhoneNumber} disabled={loading}>Patch Phone Number</Button>
             </div>
-            <div className="flex gap-2 items-end">
-              <div className="flex-1 grid gap-1.5">
-                <Label htmlFor="customer">Customer Number (+1...)</Label>
-                <Input id="customer" placeholder="+1234567890" value={customerNumber} onChange={(e) => setCustomerNumber(e.target.value)} />
-              </div>
-              <Button onClick={handleCall} disabled={loading}>Call</Button>
-            </div>
-          </CardContent>
-        </Card>
+          ))}
+        </div>
       )}
 
-      {status && (
-        <div className="mt-4 text-sm text-muted-foreground">{status}</div>
-      )}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit agent</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-3">
+            <div className="grid gap-1.5">
+              <Label htmlFor="edit-name">Name</Label>
+              <Input id="edit-name" value={editName} onChange={(e) => setEditName(e.target.value)} />
+            </div>
+            <div className="grid gap-1.5">
+              <Label htmlFor="edit-first">First message</Label>
+              <Input id="edit-first" value={editFirst} onChange={(e) => setEditFirst(e.target.value)} />
+            </div>
+            <div className="grid gap-1.5">
+              <Label htmlFor="edit-system">System prompt</Label>
+              <Input id="edit-system" value={editSystem} onChange={(e) => setEditSystem(e.target.value)} />
+            </div>
+            {/* Destination number is per-call; not saved on assistant */}
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setEditOpen(false)} disabled={loading}>Cancel</Button>
+              <Button onClick={() => editing && handleRowUpdate(editing)} disabled={loading}>Save</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -5,10 +5,7 @@ import { vapi } from '@/lib/vapi/client';
 export async function POST(req: NextRequest) {
   try {
     const supabase = await getSupabaseServerClient();
-    const {
-      agentId,
-      metadata
-    }: { agentId: string; metadata?: Record<string, unknown> } = await req.json();
+    const { agentId }: { agentId: string } = await req.json();
 
     if (!agentId) {
       return NextResponse.json({ error: 'Missing agentId' }, { status: 400 });
@@ -27,7 +24,7 @@ export async function POST(req: NextRequest) {
 
     const { data, error } = await supabase
       .from('agents')
-      .insert({ user_id: user.id, agent_id: agentId, metadata })
+      .insert({ user_id: user.id, agent_id: agentId })
       .select('*')
       .single();
 
@@ -58,7 +55,7 @@ export async function GET() {
 
     const { data, error } = await supabase
       .from('agents')
-      .select('id, agent_id, metadata, created_at, updated_at')
+      .select('id, agent_id, created_at, updated_at')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false });
 

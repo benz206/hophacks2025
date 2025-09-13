@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
 import { vapi } from '@/lib/vapi/client';
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const supabase = await getSupabaseServerClient();
     const {
@@ -12,7 +12,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
     if (userError) return NextResponse.json({ error: userError.message }, { status: 401 });
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { id } = params; // this is the row id in public.agents
+    const { id } = await params; // this is the row id in public.agents
     if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
 
     const { data: row, error: fetchErr } = await supabase
@@ -26,7 +26,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
     // Delete from Vapi first (ignore if already missing)
     try {
       await vapi.assistants.delete(row.agent_id);
-    } catch (_) {}
+    } catch {}
 
     // Delete from Supabase
     const { error: delErr } = await supabase
@@ -42,5 +42,3 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
-
-
