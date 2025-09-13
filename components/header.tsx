@@ -1,6 +1,6 @@
-import { Button } from "@radix-ui/themes"
+import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "./theme-toggle"
-import { Phone, Menu } from "lucide-react"
+import { Phone } from "lucide-react"
 import Link from "next/link"
 
 export function Header() {
@@ -40,14 +40,8 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Button variant="ghost" size="2" className="hidden md:inline-flex" asChild>
+          <Button className="hidden md:inline-flex" asChild>
             <Link href="/login">Log in</Link>
-          </Button>
-          <Button size="2" variant="surface" asChild>
-            <Link href="/login">Get Started</Link>
-          </Button>
-          <Button variant="ghost" size="2" className="md:hidden" aria-label="Open menu">
-            <Menu className="h-4 w-4" />
           </Button>
         </div>
       </div>

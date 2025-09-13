@@ -1,4 +1,4 @@
-import { Button } from "@radix-ui/themes"
+import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react";
 
 export function CTASection() {
@@ -14,11 +14,11 @@ export function CTASection() {
             with our simple API.
           </p>
           <div className="mt-8 flex items-center justify-center gap-x-3">
-            <Button size="3" variant="surface" className="inline-flex items-center">
+            <Button className="inline-flex items-center">
               Start Free Trial
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="3" className="inline-flex items-center">
+            <Button variant="ghost" className="inline-flex items-center">
               Schedule Demo
             </Button>
           </div>

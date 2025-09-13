@@ -1,7 +1,6 @@
 "use client"
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
-import { Theme } from "@radix-ui/themes"
 
 type Appearance = "light" | "dark"
 
@@ -75,9 +74,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeContext.Provider value={value}>
-      <Theme appearance={appearance} accentColor="gray" grayColor="slate" radius="large">
-        {children}
-      </Theme>
+      {children}
     </ThemeContext.Provider>
   )
 }

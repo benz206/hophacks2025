@@ -1,5 +1,5 @@
 
-import { Card } from "@radix-ui/themes"
+import { Card } from "@/components/ui/card"
 
 import { Brain, Zap, Shield, BarChart3, Globe, Clock } from "lucide-react"
 

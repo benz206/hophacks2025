@@ -1,4 +1,5 @@
-import { Card, Avatar } from "@radix-ui/themes"
+import { Card } from "@/components/ui/card"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 
 const testimonials = [
   {
@@ -47,10 +48,12 @@ export function TestimonialsSection() {
                 <div className="p-5">
                   <blockquote className="text-sm sm:text-base text-foreground">&quot;{testimonial.content}&quot;</blockquote>
                   <div className="mt-5 flex items-center gap-3">
-                    <Avatar size="3" radius="full" fallback={testimonial.author.split(" ").map((n) => n[0]).join("")}
-                      src={testimonial.avatar || "/placeholder.svg"}
-                      alt={testimonial.author}
-                    />
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={testimonial.avatar || "/placeholder.svg"} alt={testimonial.author} />
+                      <AvatarFallback>
+                        {testimonial.author.split(" ").map((n) => n[0]).join("")}
+                      </AvatarFallback>
+                    </Avatar>
                     <div>
                       <div className="font-medium text-foreground">{testimonial.author}</div>
                       <div className="text-xs text-muted-foreground">
