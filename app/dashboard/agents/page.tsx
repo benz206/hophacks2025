@@ -8,6 +8,24 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
 
+type AgentRow = {
+  id: string;
+  agent_id: string;
+  created_at: string;
+  updated_at: string;
+  phone_number?: string;
+  metadata?: {
+    documents?: AgentDocument[];
+    lastExtractedMarkdown?: string;
+  };
+};
+
+type AgentDocument = {
+  id: string;
+  name: string;
+  markdown: string;
+  uploadedAt: string;
+};
 
 export default function AgentsPage() {
   const [name, setName] = useState("");
@@ -174,7 +192,7 @@ export default function AgentsPage() {
       const res = await fetch(`/api/vapi/assistants/${row.agent_id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
+        body: JSON.stringify({ ...body, phoneNumber: editPhone })
       });
       if (!res.ok) throw new Error('Failed to update agent');
       

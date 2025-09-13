@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
-import { vapi } from '@/lib/vapi/client';
 
 export async function POST(req: NextRequest) {
   try {

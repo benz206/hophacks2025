@@ -30,6 +30,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    console.log('Creating call in Vapi', assistantId, formattedNumber);
+
     // Create call in Vapi
     const call = await vapi.calls.create({
       assistantId,
@@ -56,7 +58,6 @@ export async function POST(req: NextRequest) {
       console.error('Failed to store call record:', dbError);
       // Don't fail the request if DB storage fails, just log it
     }
-
     return NextResponse.json({ call, callRecord }, { status: 201 });
   } catch (error: unknown) {
     if (error && typeof error === 'object' && 'statusCode' in (error as unknown as object)) {
