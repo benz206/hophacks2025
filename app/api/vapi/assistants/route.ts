@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     const assistant = await vapi.assistants.create({
       name,
       firstMessage: firstmessage,
-      server: { url: `http://localhost:3000/api/vapi/status` }, // for webhook
+      server: { url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/vapi/status` }, // for webhook
       model: {
         provider: "openai",
         model: "gpt-4o",
