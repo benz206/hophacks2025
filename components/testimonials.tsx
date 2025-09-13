@@ -44,7 +44,7 @@ export function TestimonialsSection() {
         <div className="mx-auto mt-14 max-w-6xl">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="rounded-xl border border-border/70 shadow-none">
+              <Card key={index} className="rounded-xl border border-border shadow-none">
                 <div className="p-5">
                   <blockquote className="text-sm sm:text-base text-foreground">&quot;{testimonial.content}&quot;</blockquote>
                   <div className="mt-5 flex items-center gap-3">

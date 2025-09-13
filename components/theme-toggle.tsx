@@ -1,23 +1,27 @@
 "use client"
 
 import { Moon, Sun } from "lucide-react"
-import { Switch } from "@/components/ui/switch"
+import { Button } from "@/components/ui/button"
 import { useThemeAppearance } from "./theme-provider"
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 
 export function ThemeToggle() {
   const { appearance, toggleAppearance } = useThemeAppearance()
-  const checked = appearance === "dark"
 
   return (
-    <label className="inline-flex items-center gap-2">
-      <span className="sr-only">Toggle dark mode</span>
-      <div className="relative inline-flex h-6 w-11 items-center">
-        <Switch checked={checked} onCheckedChange={toggleAppearance} aria-label="Toggle dark mode">
-          <VisuallyHidden>Dark mode</VisuallyHidden>
-        </Switch>
-      </div>
-    </label>
+    <Button
+      variant="ghost"
+      size="icon"
+      aria-label="Toggle theme"
+      title="Toggle theme"
+      onClick={toggleAppearance}
+   >
+      {appearance === "dark" ? (
+        <Moon className="h-4 w-4" />
+      ) : (
+        <Sun className="h-4 w-4" />
+      )}
+      <span className="sr-only">Toggle theme</span>
+    </Button>
   )
 }
 

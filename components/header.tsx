@@ -40,7 +40,7 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Button className="hidden md:inline-flex" asChild>
+          <Button className="hidden md:inline-flex ml-1 md:ml-2" asChild>
             <Link href="/login">Log in</Link>
           </Button>
         </div>

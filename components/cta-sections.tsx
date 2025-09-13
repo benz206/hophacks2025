@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export function CTASection() {
   return (
-    <section className="py-20 sm:py-28">
+    <section className="py-16 sm:py-24">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl text-balance">
@@ -26,7 +26,7 @@ export function CTASection() {
             </Button>
           </div>
 
-          <div className="mt-6 text-xs sm:text-sm text-muted-foreground">
+          <div className="mt-4 text-xs sm:text-sm text-muted-foreground">
             No credit card required • 14-day free trial • Cancel anytime
           </div>
         </div>
