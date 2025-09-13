@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Home, Bot, Phone, Settings, LogOut } from "lucide-react";
+import { Home, Bot, Phone, Settings, LogOut, Phone as PhoneIcon } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const supabase = await getSupabaseServerClient();
@@ -30,7 +31,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-[220px_1fr]">
       <aside className="border-r bg-muted/10 px-3 py-4 hidden md:flex md:flex-col">
-        <div className="px-2 py-1 text-sm font-semibold">Cogent</div>
+        <Link href="/" className="px-2 py-1 flex items-center gap-2 group">
+          <div className="flex items-center justify-center w-10 h-10 rounded-md bg-foreground text-background transition-transform group-hover:-translate-y-0.5">
+            <PhoneIcon className="h-5 w-5" aria-hidden="true" strokeWidth={1.75} />
+          </div>
+          <span className="text-lg font-semibold tracking-tight">Cogent</span>
+        </Link>
         <nav className="mt-2 grid gap-1">
           {/* Overview */}
           {/* Active styles will be applied on client by Next <Link> prefetch state; keep server neutral */}
@@ -55,15 +61,18 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <div className="flex flex-col min-h-screen">
         <header className="border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 py-3 flex items-center justify-between">
           <div className="text-sm text-muted-foreground">Dashboard</div>
-          <div className="md:hidden">
-            <form action={async () => {
-              'use server'
-              const supabase = await getSupabaseServerClient();
-              await supabase.auth.signOut();
-              redirect('/');
-            }}>
-              <Button variant="outline" size="sm">Sign out</Button>
-            </form>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <div className="md:hidden">
+              <form action={async () => {
+                'use server'
+                const supabase = await getSupabaseServerClient();
+                await supabase.auth.signOut();
+                redirect('/');
+              }}>
+                <Button variant="outline" size="sm">Sign out</Button>
+              </form>
+            </div>
           </div>
         </header>
         <main className="p-4">{children}</main>
