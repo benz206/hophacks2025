@@ -2,7 +2,6 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100),          -- full name of the user
-    phone_number VARCHAR(20),   -- optional, for call routing
     email VARCHAR(150),         -- optional, for login/identification
     created_at TIMESTAMP DEFAULT NOW()
 );
