@@ -81,16 +81,26 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { data, error } = await supabase
+    const updateBody: Record<string, unknown> = {};
+    if (typeof phoneNumber === 'string') {
+      updateBody.phone_number = phoneNumber;
+    }
+
+    const query = supabase
       .from('agents')
-      .update({ phone_number: phoneNumber })
+      .update(updateBody)
       .eq('id', id)
       .eq('user_id', user.id)
       .select('*')
-      .single();
+      .maybeSingle();
+
+    const { data, error } = await query;
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+    if (!data) {
+      return NextResponse.json({ error: 'Agent not found' }, { status: 404 });
     }
 
     return NextResponse.json({ agent: data }, { status: 200 });

@@ -14,18 +14,24 @@ export async function POST(req: NextRequest) {
 
         const { data, error } = await supabase
           .from("agents")
-          .select("phone_number")
+          .select("phone_number, created_at")
           .eq("agent_id", assistantId)
-          .single();
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
         if (error) {
           console.error("Failed to fetch agent:", error);
           break;
         }
 
         const customerNumber = data?.phone_number;
+        if (!customerNumber) {
+          console.warn("No phone number found for assistantId:", assistantId);
+          break;
+        }
         const summary = message.summary;
 
-        const formattedNumber = customerNumber.startsWith("+")
+        const formattedNumber = String(customerNumber).startsWith("+")
           ? customerNumber
           : `+1${customerNumber}`;
 

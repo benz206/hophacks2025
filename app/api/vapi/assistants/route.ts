@@ -14,48 +14,14 @@ export async function POST(req: NextRequest) {
     const assistant = await vapi.assistants.create({
       name,
       firstMessage: firstmessage,
-      server: { url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/vapi/status` }, // for webhook
+      server: { url: `http://localhost:3000/api/vapi/status` }, // for webhook
       model: {
         provider: "openai",
         model: "gpt-4o",
         messages: [
           {
             role: "system",
-            content: `You are an Assistant, making a phone call to a service or a service representative. 
-Your goal is to act on the user's behalf and complete their tasks or objectives during the call. 
-
-CURRENT DATE AND TIME: ${new Date().toLocaleString("en-US", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              hour: "numeric",
-              minute: "2-digit",
-              timeZoneName: "short",
-            })}
-
-You have access to the following tools: 
-- endCall (to end the conversation) 
-- sms (to send text messages) 
-- dtmf (to handle keypad input) 
-- apiRequest (to make API calls like checking order status)
-- checkAvailability (to check calendar availability)
-- scheduleAppointment (to schedule appointments and create calendar events)
-- transferCall (to transfer the call to the user when needed)
-
-            Use these tools when appropriate to successfully complete the user's tasks. 
-
-IMPORTANT TRANSFER RULES:
-- Use transferCall ONLY when there are problems or issues during the call
-- Use transferCall when you don't have sufficient information to complete the task
-- Use transferCall when asked for sensitive security information (SSN, passwords, PINs, account numbers, etc.)
-- Use transferCall when the user asks to be transferred or wants to speak directly
-- Use transferCall when the service representative requests to speak with the actual account holder
-- Use transferCall when you encounter complex issues beyond your capabilities
-- Use transferCall when there are technical difficulties or errors
-- Do NOT transfer the call if the task is completed successfully - simply end the call
-
-            User information: ${systemprompt}`,
+            content: systemprompt,
           },
         ],
         tools: [
