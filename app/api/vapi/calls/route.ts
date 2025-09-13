@@ -30,8 +30,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    console.log('Creating call in Vapi', assistantId, formattedNumber);
-
     // Create call in Vapi
     const call = await vapi.calls.create({
       assistantId,

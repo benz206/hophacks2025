@@ -264,11 +264,11 @@ export default function AgentsPage() {
                 <Input id="first" placeholder="Hello! How can I help you today?" value={firstmessage} onChange={(e) => setFirstMessage(e.target.value)} />
               </div>
               <div className="grid gap-1.5">
-                <Label htmlFor="system">System prompt</Label>
-                <Input id="system" placeholder="You are a friendly phone support assistant..." value={systemprompt} onChange={(e) => setSystemPrompt(e.target.value)} />
+                <Label htmlFor="system">What do you want agent to do?</Label>
+                <Input id="system" placeholder="You are an insurance agent..." value={systemprompt} onChange={(e) => setSystemPrompt(e.target.value)} />
               </div>
               <div className="grid gap-1.5">
-                <Label htmlFor="phone">Phone Number</Label>
+                <Label htmlFor="phone">Your Phone Number</Label>
                 <Input 
                   id="phone" 
                   placeholder="5551234567" 
@@ -306,7 +306,7 @@ export default function AgentsPage() {
           </div>
         </div>
       ) : agents.length === 0 ? (
-        <div className="rounded-xl border p-5 bg-card text-sm text-muted-foreground">No agents yet.</div>
+        <div className='flex items-center justify-center py-12'></div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {agents.map((a) => {
@@ -314,62 +314,69 @@ export default function AgentsPage() {
             const isLoading = loadingAssistant === a.agent_id;
 
             return (
-              <div key={a.id} className="rounded-lg border bg-card p-4 shadow-sm flex flex-col">
-                <div className="flex items-start justify-between">
-                  <h3 className="text-lg font-semibold text-foreground">
-                    {isLoading ? (
-                      <span className="inline-flex items-center gap-2">
-                        <Spinner size="sm" />
-                        <span>Loading...</span>
-                      </span>
-                    ) : (
-                      assistant?.name ?? 'Untitled'
-                    )}
-                  </h3>
-                  <Button variant="secondary" size="sm" onClick={() => openEdit(a)} disabled={loading}>
-                    Edit
-                  </Button>
-                </div>
-                
-                {/* Assistant Details */}
-                {assistant && (
-                  <div className="mt-3 space-y-2 text-sm text-muted-foreground">
-                    {assistant.firstMessage && (
-                      <div>
-                        <span className="font-medium">First Message:</span>
-                        <p className="mt-1 text-xs bg-muted p-2 rounded">
-                          &ldquo;{assistant.firstMessage}&rdquo;
-                        </p>
-                      </div>
-                    )}
-                    {assistant.model?.tools && assistant.model.tools.length > 0 && (
-                      <div>
-                        <span className="font-medium">Tools:</span>
-                        <div className="mt-1 flex flex-wrap gap-1">
-                          {assistant.model.tools.map((tool: any, index: number) => (
-                            <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
-                              {tool.name || tool.type}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">Created:</span>
-                      <span>{new Date(assistant.createdAt).toLocaleDateString()}</span>
-                    </div>
-                    {a.phone_number && (
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">Phone:</span>
-                        <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-mono">
-                          {a.phone_number}
+              <div key={a.id} className="rounded-lg border bg-card p-4 shadow-sm">
+                <div className="flex items-start justify-between gap-4">
+                  {/* Left Column - Information */}
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-foreground mb-2">
+                      {isLoading ? (
+                        <span className="inline-flex items-center gap-2">
+                          <Spinner size="sm" />
+                          <span>Loading...</span>
                         </span>
+                      ) : (
+                        assistant?.name ?? 'Untitled'
+                      )}
+                    </h3>
+                    
+                    {/* Assistant Details */}
+                    {assistant && (
+                      <div className="text-sm text-muted-foreground space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">Created:</span>
+                          <span>{new Date(assistant.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        {a.phone_number && (
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">Phone:</span>
+                            <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-mono">
+                              {a.phone_number}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
-                )}
+                  
+                  {/* Right Column - Buttons */}
+                  <div className="flex flex-col gap-2">
+                    {/* <Button variant="outline" size="sm" onClick={() => openEdit(a)} disabled={loading}>
+                      Edit
+                    </Button> */}
+                    {(() => {
+                      const value = destNumbers[a.agent_id] ?? '';
+                      const valid = isValidPhone(value);
+                      return (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setConfirmCallRow(a)}
+                          disabled={loading || !valid}
+                          className="bg-green-600 hover:bg-green-700 text-white border-green-600"
+                        >
+                          {loading ? <Spinner size="sm" className="mr-2" /> : null}
+                          Call
+                        </Button>
+                      );
+                    })()}
+                    <Button className='bg-red-400 hover:bg-red-500 text-white border-red-600' size="sm" onClick={() => setConfirmDeleteId(a.id)} disabled={loading}>
+                      {loading ? <Spinner size="sm" className="mr-2" /> : null}
+                      Delete
+                    </Button>
+                  </div>
+                </div>
                 
-              <div className="flex-1 space-y-3 mt-2">
+              <div className="flex-1 mt-2">
                 <div className="space-y-2">
                   {(() => {
                     const value = destNumbers[a.agent_id] ?? '';
@@ -397,37 +404,16 @@ export default function AgentsPage() {
                   })()}
                 </div>
                 {/* Per-agent document upload */}
-                <div className="space-y-2 mt-2">
+                {/* <div className="space-y-2 mt-2">
                   <Label className="text-sm font-medium">Agent documents</Label>
                   <PerAgentUploader agentRow={a} />
                 </div>
-                {/* Show last extracted markdown summary (collapsed preview) */}
+
                 {a.metadata?.lastExtractedMarkdown ? (
                   <div className="rounded-md border bg-background p-2 text-xs max-h-32 overflow-auto whitespace-pre-wrap">
                     {String(a.metadata.lastExtractedMarkdown).slice(0, 800)}{String(a.metadata.lastExtractedMarkdown).length > 800 ? '…' : ''}
                   </div>
-                ) : null}
-              </div>
-              <div className="mt-4 flex items-center justify-between gap-2">
-                <Button variant="destructive" size="sm" onClick={() => setConfirmDeleteId(a.id)} disabled={loading}>
-                  {loading ? <Spinner size="sm" className="mr-2" /> : null}
-                  Delete
-                </Button>
-                {(() => {
-                  const value = destNumbers[a.agent_id] ?? '';
-                  const valid = isValidPhone(value);
-                  return (
-                    <Button
-                      size="sm"
-                      onClick={() => setConfirmCallRow(a)}
-                      disabled={loading || !valid}
-                      className="bg-green-600 hover:bg-green-700"
-                    >
-                      {loading ? <Spinner size="sm" className="mr-2" /> : null}
-                      Call
-                    </Button>
-                  );
-                })()}
+                ) : null} */}
               </div>
             </div>
           );
