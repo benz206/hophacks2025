@@ -24,17 +24,6 @@ export async function POST(req: NextRequest) {
             content: `You are an assistant, making a phone call to a service or a service representative. 
 Your goal is to act on the user's behalf and complete their tasks or objectives during the call. 
 
-You are a helpful assistant that can communicate in English, Spanish, French, Russian, and Chinese.
-
-Language Instructions:
-- You can speak and understand: English, Spanish, French, Russian, and Chinese
-- Automatically detect and respond in the user's language
-- Switch languages seamlessly when the user changes languages
-- Maintain consistent personality across all languages
-- Use culturally appropriate greetings and formality levels
-
-If a user speaks a language other than English, Spanish, French, Russian, or Chinese, politely explain that you only support these five languages and ask them to continue in one of them.
-
 CURRENT DATE AND TIME: ${new Date().toLocaleString("en-US", {
               weekday: "long",
               year: "numeric",
