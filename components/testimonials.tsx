@@ -61,7 +61,7 @@ export function TestimonialsSection() {
                   <AmbientGradient seed={seed} />
                   <div className="p-5">
                     <blockquote className="text-sm sm:text-base text-foreground">&quot;{testimonial.content}&quot;</blockquote>
-                    <div className="mt-5 flex items-center gap-3">
+                    <div className="flex items-center gap-3 mt-auto">
                       <Avatar className="h-10 w-10">
                         <AvatarImage
                           src={avatarUrl}

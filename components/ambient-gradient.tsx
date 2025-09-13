@@ -89,12 +89,14 @@ export function AmbientGradient({ className, variant = "violet", seed, palette }
   const hueA = baseHue
   const hueB = (baseHue + 48) % 360
   const hueC = (baseHue + 312) % 360
+  const hueD = (baseHue + 180) % 360
   const lineHue = (baseHue + 12) % 360
 
   // base subtle values
   const lA0 = 0.88, cA0 = 0.16, aA0 = 0.5
   const lB0 = 0.9, cB0 = 0.14, aB0 = 0.42
   const lC0 = 0.92, cC0 = 0.12, aC0 = 0.36
+  const lD0 = 0.9, cD0 = 0.1, aD0 = 0.28
   const lLine0 = 0.78, cLine0 = 0.12, aLine0 = 0.35
 
   // slight, deterministic variation per seed
@@ -102,12 +104,14 @@ export function AmbientGradient({ className, variant = "violet", seed, palette }
   const lA = lA0, cA = Math.max(0, cA0 + jitter(h >>> 10, 6)), aA = Math.max(0.2, aA0 + jitter(h >>> 11, 8))
   const lB = lB0, cB = Math.max(0, cB0 + jitter(h >>> 12, 6)), aB = Math.max(0.18, aB0 + jitter(h >>> 13, 8))
   const lC = lC0, cC = Math.max(0, cC0 + jitter(h >>> 14, 6)), aC = Math.max(0.14, aC0 + jitter(h >>> 15, 8))
+  const lD = lD0, cD = Math.max(0, cD0 + jitter(h >>> 18, 5)), aD = Math.max(0.12, aD0 + jitter(h >>> 19, 8))
   const lLine = lLine0, cLine = Math.max(0, cLine0 + jitter(h >>> 16, 6)), aLine = Math.max(0.15, aLine0 + jitter(h >>> 17, 10))
 
   // sizes
   const s1 = 180 + (h % 80) // px
   const s2 = 200 + ((h >>> 5) % 90)
   const s3 = 170 + ((h >>> 9) % 80)
+  const s4 = 120 + ((h >>> 11) % 60)
 
   // choose corners and line side to avoid visible repetition
   const corner1 = (h >>> 2) & 3
@@ -131,6 +135,8 @@ export function AmbientGradient({ className, variant = "violet", seed, palette }
 
   const left3Pct = 35 + ((h >>> 6) % 30) // 35%..65%
   const top3Pct = 25 + ((h >>> 7) % 40)  // 25%..65%
+  const left4Pct = 20 + ((h >>> 9) % 60) // 20%..80%
+  const top4Pct = 15 + ((h >>> 10) % 55) // 15%..70%
 
   return (
     <div className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} aria-hidden>
@@ -153,6 +159,10 @@ export function AmbientGradient({ className, variant = "violet", seed, palette }
         <div
           className="absolute -translate-x-1/2 rounded-full blur-3xl"
           style={{ left: `${left3Pct}%`, top: `${top3Pct}%`, width: `${s3}px`, height: `${s3}px`, background: `radial-gradient(ellipse at center, oklch(${lC} ${cC} ${hueC} / ${aC}), transparent 70%)` }}
+        />
+        <div
+          className="absolute -translate-x-1/2 rounded-full blur-3xl"
+          style={{ left: `${left4Pct}%`, top: `${top4Pct}%`, width: `${s4}px`, height: `${s4}px`, background: `radial-gradient(ellipse at center, oklch(${lD} ${cD} ${hueD} / ${aD}), transparent 72%)` }}
         />
       </div>
     </div>

@@ -32,16 +32,7 @@ export function Footer() {
                   Pricing
                 </Link>
               </li>
-              <li>
-                <Link href="/docs/api" className="text-sm text-muted-foreground hover:text-foreground">
-                  API
-                </Link>
-              </li>
-              <li>
-                <Link href="/docs" className="text-sm text-muted-foreground hover:text-foreground">
-                  Documentation
-                </Link>
-              </li>
+              
             </ul>
           </div>
         </div>
