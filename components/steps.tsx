@@ -10,12 +10,12 @@ const steps: Step[] = [
 
 export function Steps() {
   return (
-    <section aria-label="How it works" className="py-16">
+    <section aria-label="How it works" className="py-20 sm:py-28 bg-muted/20">
       <div className="container mx-auto px-4 max-w-5xl">
         <div className="grid grid-cols-[1fr_auto_1fr] gap-x-6 sm:gap-x-10">
           <div className="space-y-10">
             {steps.map((step, i) => (
-              <div key={i} className="rounded-xl border border-border bg-card p-4">
+              <div key={i} className="rounded-xl border border-border bg-card p-4 shadow-sm">
                 <div className="text-sm text-muted-foreground">Step {i + 1}</div>
                 <div className="mt-1 font-medium text-foreground">{step.title}</div>
                 <div className="text-sm text-muted-foreground mt-1">{step.description}</div>
