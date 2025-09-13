@@ -1,7 +1,7 @@
 import { ElectricWire } from "@/components/electric-wire"
 import { AmbientGradient } from "@/components/ambient-gradient"
 import Link from "next/link"
-import { Bot, Phone, Rocket, CheckCircle2, ArrowRight } from "lucide-react"
+import { Bot, Rocket, CheckCircle2, ArrowRight } from "lucide-react"
 
 type Step = {
   title: string;
@@ -27,17 +27,7 @@ const steps: Step[] = [
     accent: "violet",
     icon: Bot,
   },
-  {
-    title: "Connect number",
-    description: "Provision a phone number in seconds.",
-    ctaText: "Open settings",
-    ctaHref: "/dashboard/settings",
-    helperTitle: "Why connect?",
-    helperBody: "Enable inbound and outbound calls with a dedicated number.",
-    helperBullets: ["Buy a number", "Assign an agent", "Place a test call"],
-    accent: "blue",
-    icon: Phone,
-  },
+  // Removed the settings step since the settings page no longer exists
   {
     title: "Go live",
     description: "Receive calls and view analytics.",
