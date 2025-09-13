@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 export default function AgentsPage() {
   const [name, setName] = useState("");
@@ -17,6 +18,13 @@ export default function AgentsPage() {
   const [status, setStatus] = useState<string | null>(null);
   const [agents, setAgents] = useState<Array<any>>([]);
   const [callNumbers, setCallNumbers] = useState<Record<string, string>>({});
+  const [createOpen, setCreateOpen] = useState(false);
+
+  function resetCreateForm() {
+    setName("");
+    setFirstMessage("");
+    setSystemPrompt("");
+  }
 
   async function loadAgents() {
     try {
@@ -74,6 +82,9 @@ export default function AgentsPage() {
       setStatus('Assistant created and saved.');
       // refresh list
       loadAgents();
+      // close modal and reset form
+      setCreateOpen(false);
+      resetCreateForm();
     } catch (err) {
       setStatus(err instanceof Error ? err.message : 'Unknown error');
     } finally {
@@ -141,32 +152,37 @@ export default function AgentsPage() {
 
   return (
     <div className="mx-auto max-w-2xl p-4">
-      <h1 className="text-2xl font-semibold mb-4">Agents</h1>
-
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Create agent</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleCreateAgent} className="grid gap-3">
-            <div className="grid gap-1.5">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" placeholder="Support Assistant" value={name} onChange={(e) => setName(e.target.value)} />
-            </div>
-            <div className="grid gap-1.5">
-              <Label htmlFor="first">First message</Label>
-              <Input id="first" placeholder="Hello! How can I help you today?" value={firstmessage} onChange={(e) => setFirstMessage(e.target.value)} />
-            </div>
-            <div className="grid gap-1.5">
-              <Label htmlFor="system">System prompt</Label>
-              <Input id="system" placeholder="You are a friendly phone support assistant..." value={systemprompt} onChange={(e) => setSystemPrompt(e.target.value)} />
-            </div>
-            <div className="flex gap-2">
-              <Button type="submit" disabled={loading}>{loading ? 'Creating…' : 'Create Agent'}</Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+      <div className="mb-4 flex items-center justify-between">
+        <h1 className="text-2xl font-semibold">Agents</h1>
+        <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+          <DialogTrigger asChild>
+            <Button>New Agent</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create agent</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleCreateAgent} className="grid gap-3">
+              <div className="grid gap-1.5">
+                <Label htmlFor="name">Name</Label>
+                <Input id="name" placeholder="Support Assistant" value={name} onChange={(e) => setName(e.target.value)} />
+              </div>
+              <div className="grid gap-1.5">
+                <Label htmlFor="first">First message</Label>
+                <Input id="first" placeholder="Hello! How can I help you today?" value={firstmessage} onChange={(e) => setFirstMessage(e.target.value)} />
+              </div>
+              <div className="grid gap-1.5">
+                <Label htmlFor="system">System prompt</Label>
+                <Input id="system" placeholder="You are a friendly phone support assistant..." value={systemprompt} onChange={(e) => setSystemPrompt(e.target.value)} />
+              </div>
+              <div className="flex gap-2 justify-end">
+                <Button type="button" variant="outline" onClick={() => setCreateOpen(false)} disabled={loading}>Cancel</Button>
+                <Button type="submit" disabled={loading}>{loading ? 'Creating…' : 'Create Agent'}</Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
 
       <Card className="mb-6">
         <CardHeader>
