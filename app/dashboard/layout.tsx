@@ -37,6 +37,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
           </div>
           <span className="text-lg font-semibold tracking-tight">Cogent</span>
         </Link>
+        <div className="mt-2 flex justify-end">
+          <ThemeToggle />
+        </div>
         <nav className="mt-2 grid gap-1">
           {/* Overview */}
           {/* Active styles will be applied on client by Next <Link> prefetch state; keep server neutral */}
@@ -58,6 +61,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </div>
       </aside>
       <div className="flex flex-col min-h-screen">
+        <div className="border-b px-4 py-2 flex items-center justify-end md:hidden">
+          <ThemeToggle />
+        </div>
         <main className="p-4">{children}</main>
       </div>
     </div>

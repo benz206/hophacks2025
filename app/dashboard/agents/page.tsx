@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
+import { Pencil, Trash2, Phone, Download } from 'lucide-react';
 
 type AgentRow = {
   id: string;
@@ -308,10 +309,12 @@ export default function AgentsPage() {
       ) : agents.length === 0 ? (
         <div className='flex items-center justify-center py-12'></div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3">
           {agents.map((a) => {
             const assistant = assistantDetails[a.agent_id];
             const isLoading = loadingAssistant === a.agent_id;
+            const destValue = destNumbers[a.agent_id] ?? '';
+            const canCall = isValidPhone(destValue) && !loading;
 
             return (
               <div key={a.id} className="rounded-lg border bg-card p-4 shadow-sm">
@@ -348,30 +351,39 @@ export default function AgentsPage() {
                     )}
                   </div>
                   
-                  {/* Right Column - Buttons */}
-                  <div className="flex flex-col gap-2">
-                    {/* <Button variant="outline" size="sm" onClick={() => openEdit(a)} disabled={loading}>
-                      Edit
-                    </Button> */}
-                    {(() => {
-                      const value = destNumbers[a.agent_id] ?? '';
-                      const valid = isValidPhone(value);
-                      return (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setConfirmCallRow(a)}
-                          disabled={loading || !valid}
-                          className="bg-green-600 hover:bg-green-700 text-white border-green-600"
-                        >
-                          {loading ? <Spinner size="sm" className="mr-2" /> : null}
-                          Call
-                        </Button>
-                      );
-                    })()}
-                    <Button className='bg-red-400 hover:bg-red-500 text-white border-red-600' size="sm" onClick={() => setConfirmDeleteId(a.id)} disabled={loading}>
-                      {loading ? <Spinner size="sm" className="mr-2" /> : null}
-                      Delete
+                  {/* Top-right icon actions: edit, delete, call (phone at far right) */}
+                  <div className="flex items-center gap-1.5 ml-auto">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => openEdit(a)}
+                      disabled={loading}
+                      aria-label="Edit agent"
+                      title="Edit"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setConfirmDeleteId(a.id)}
+                      disabled={loading}
+                      aria-label="Delete agent"
+                      title="Delete"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-green-600 text-green-700 hover:bg-green-600/10"
+                      onClick={() => setConfirmCallRow(a)}
+                      disabled={!canCall}
+                      aria-label={canCall ? "Call" : "Enter a valid destination number"}
+                      title={canCall ? "Call" : "Enter a valid destination number"}
+                    >
+                      {loading ? <Spinner size="sm" className="mr-1" /> : <Phone className="mr-1.5 h-4 w-4" aria-hidden="true" />}
+                      <span>Call</span>
                     </Button>
                   </div>
                 </div>
@@ -404,8 +416,7 @@ export default function AgentsPage() {
                   })()}
                 </div>
                 {/* Per-agent document upload */}
-                {/* <div className="space-y-2 mt-2">
-                  <Label className="text-sm font-medium">Agent documents</Label>
+                <div className="space-y-2 mt-2">
                   <PerAgentUploader agentRow={a} />
                 </div>
 
@@ -413,7 +424,7 @@ export default function AgentsPage() {
                   <div className="rounded-md border bg-background p-2 text-xs max-h-32 overflow-auto whitespace-pre-wrap">
                     {String(a.metadata.lastExtractedMarkdown).slice(0, 800)}{String(a.metadata.lastExtractedMarkdown).length > 800 ? '…' : ''}
                   </div>
-                ) : null} */}
+                ) : null}
               </div>
             </div>
           );
@@ -481,7 +492,10 @@ export default function AgentsPage() {
                   Calling...
                 </>
               ) : (
-                'Call'
+                <>
+                  <Phone className="mr-2 h-4 w-4" aria-hidden="true" />
+                  Call
+                </>
               )}
             </Button>
           </div>
@@ -542,57 +556,67 @@ export default function AgentsPage() {
 
 function PerAgentUploader({ agentRow }: { agentRow: AgentRow }) {
   const [files, setFiles] = useState<FileList | null>(null);
-  const [prompt, setPrompt] = useState<string>("");
   const [busy, setBusy] = useState(false);
+  const [vapiFiles, setVapiFiles] = useState<any[] | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [confirmDeleteFile, setConfirmDeleteFile] = useState<any | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
-  async function run() {
-    if (!files || files.length === 0) return;
+  async function run(selectedFiles?: FileList | null) {
+    const toProcess = selectedFiles ?? files;
+    if (!toProcess || toProcess.length === 0) return;
     try {
       setBusy(true);
       const collected: AgentDocument[] = [];
-      for (let i = 0; i < files.length; i++) {
-        const file = files.item(i)!;
+      for (let i = 0; i < toProcess.length; i++) {
+        const file = toProcess.item(i)!;
         const fd = new FormData();
         fd.append('file', file);
-        if (prompt) fd.append('prompt', prompt);
-        const res = await fetch('/api/files/extract', { method: 'POST', body: fd });
+        const res = await fetch('/api/vapi/files', { method: 'POST', body: fd });
         if (!res.ok) {
           const j = await res.json().catch(() => ({}));
-          throw new Error(j.error || 'Failed to extract');
+          throw new Error(j.error || 'Upload failed');
         }
-        const j = await res.json();
+        const uploaded = await res.json();
+        const fileId: string | undefined = uploaded?.id;
+        let fileRecord: any = uploaded;
+        let markdown = '';
+
+        // Poll for processing completion if needed
+        try {
+          if (fileId) {
+            for (let attempt = 0; attempt < 10; attempt++) {
+              if (fileRecord?.status === 'done' || fileRecord?.parsedTextUrl) break;
+              if (fileRecord?.status === 'failed') {
+                throw new Error('File processing failed');
+              }
+              await new Promise((r) => setTimeout(r, 1000));
+              const statRes = await fetch(`/api/vapi/files/${encodeURIComponent(fileId)}`);
+              if (statRes.ok) {
+                fileRecord = await statRes.json();
+              } else {
+                break; // stop polling on error
+              }
+            }
+          }
+
+          const textUrl = fileRecord?.parsedTextUrl || uploaded?.parsedTextUrl;
+          if (textUrl) {
+            const t = await fetch(textUrl);
+            if (t.ok) markdown = await t.text();
+          }
+        } catch { /* ignore */ }
         const doc: AgentDocument = {
           id: `${Date.now()}-${i}`,
-          name: file.name,
-          markdown: j.markdown || '',
+          name: fileRecord?.originalName || uploaded?.originalName || file.name,
+          markdown,
           uploadedAt: new Date().toISOString(),
         };
         collected.push(doc);
       }
-
-      const combined = collected.map((d) => d.markdown).join('\n\n');
-      const resAssistant = await fetch(`/api/vapi/assistants/${agentRow.agent_id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ systemprompt: combined })
-      });
-      if (!resAssistant.ok) {
-        const jj = await resAssistant.json().catch(() => ({}));
-        throw new Error(jj.error || 'Failed to update assistant prompt');
-      }
-
-      const existingDocs = Array.isArray(agentRow.metadata?.documents) ? agentRow.metadata?.documents as AgentDocument[] : [];
-      const nextDocs = [...collected, ...existingDocs];
-      const saveMeta = await fetch(`/api/agents/${agentRow.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ metadata: { ...(agentRow.metadata ?? {}), documents: nextDocs, lastExtractedMarkdown: collected[0]?.markdown || '' } })
-      });
-      if (!saveMeta.ok) {
-        const jj2 = await saveMeta.json().catch(() => ({}));
-        throw new Error(jj2.error || 'Failed to save preview to agent');
-      }
-      toast.success('Assistant prompt updated with extracted text');
+      setFiles(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      await refreshVapiFiles();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Upload failed');
     } finally {
@@ -600,32 +624,115 @@ function PerAgentUploader({ agentRow }: { agentRow: AgentRow }) {
     }
   }
 
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const selected = e.target.files;
+    setFiles(selected);
+    if (selected && selected.length > 0) {
+      await run(selected);
+    }
+  }
+
+  async function refreshVapiFiles() {
+    try {
+      const res = await fetch('/api/vapi/files');
+      if (res.ok) {
+        const j = await res.json();
+        const list = Array.isArray(j?.results) ? j.results : Array.isArray(j) ? j : [];
+        setVapiFiles(list);
+      }
+    } catch {}
+  }
+
+  useEffect(() => {
+    refreshVapiFiles();
+  }, []);
+
   return (
     <div className="grid gap-2">
-      <Input placeholder="Extraction prompt (optional)" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
-      <Input type="file" multiple className="cursor-pointer" onChange={(e) => setFiles(e.target.files)} />
-      <div className="flex justify-end">
-        <Button size="sm" variant="outline" onClick={run} disabled={busy || !files || files.length === 0}>
-          {busy ? (<><Spinner size="sm" className="mr-1" /> Processing...</>) : 'Upload & Extract'}
+      <Input ref={fileInputRef} type="file" multiple className="hidden" onChange={handleFileChange} />
+      <div className="flex items-center justify-between">
+        <Label className="text-sm font-medium">Agent documents</Label>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => {
+            if (busy) return;
+            if (fileInputRef.current) fileInputRef.current.click();
+          }}
+          disabled={busy}
+        >
+          {busy ? (<><Spinner size="sm" className="mr-1" /> Uploading...</>) : 'Upload'}
         </Button>
       </div>
-      <div className="grid gap-2">
-        {Array.isArray(agentRow.metadata?.documents) && (agentRow.metadata!.documents as AgentDocument[]).length > 0 ? (
-          (agentRow.metadata!.documents as AgentDocument[]).map((doc) => (
-            <div key={doc.id} className="rounded-md border bg-background p-2 text-xs">
-              <div className="flex items-center justify-between gap-2">
-                <div className="font-medium truncate cursor-pointer" title={doc.name}>{doc.name}</div>
-                <div className="text-muted-foreground text-[10px]">{new Date(doc.uploadedAt).toLocaleString()}</div>
+      <div className="flex flex-col gap-2 max-h-56 overflow-auto">
+        {Array.isArray(vapiFiles) && vapiFiles.length > 0 ? (
+          vapiFiles.map((f) => (
+            <div key={f.id} className="flex items-center justify-between rounded-md border bg-background p-2">
+              <div className="min-w-0">
+                <div className="truncate text-xs font-medium" title={f.originalName || f.name}>{f.originalName || f.name || f.id}</div>
+                <div className="text-[10px] text-muted-foreground mt-0.5">Uploaded {new Date((f.createdAt || f.updatedAt || Date.now())).toLocaleString()}</div>
               </div>
-              <div className="mt-2 max-h-32 overflow-auto whitespace-pre-wrap">
-                {doc.markdown.slice(0, 1200)}{doc.markdown.length > 1200 ? '…' : ''}
+              <div className="flex items-center gap-2 ml-2 shrink-0">
+                <Button asChild size="icon" variant="outline" className="h-7 w-7 rounded-md">
+                  <a href={f.url || f.parsedTextUrl || '#'} target="_blank" rel="noreferrer" aria-label="Download">
+                    <Download className="h-3.5 w-3.5" />
+                  </a>
+                </Button>
+                <Button
+                  size="icon"
+                  variant="outline"
+                  className="h-7 w-7 rounded-md"
+                  aria-label="Delete"
+                  disabled={deleting}
+                  onClick={() => setConfirmDeleteFile(f)}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
               </div>
             </div>
           ))
         ) : (
-          <div className="text-xs text-muted-foreground">No documents yet</div>
+          <div className="text-xs text-muted-foreground">No files</div>
         )}
       </div>
+      <Dialog open={!!confirmDeleteFile} onOpenChange={(o) => { if (!o) setConfirmDeleteFile(null); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete file?</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            This will permanently delete {confirmDeleteFile?.originalName || confirmDeleteFile?.name || 'this file'}.
+          </p>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setConfirmDeleteFile(null)} disabled={deleting}>Cancel</Button>
+            <Button
+              variant="destructive"
+              onClick={async () => {
+                if (!confirmDeleteFile) return;
+                try {
+                  setDeleting(true);
+                  const del = await fetch(`/api/vapi/files/${encodeURIComponent(confirmDeleteFile.id)}`, { method: 'DELETE' });
+                  if (!del.ok) {
+                    const j = await del.json().catch(() => ({}));
+                    throw new Error(j.error || 'Failed to delete');
+                  }
+                  toast.success('File deleted');
+                  setConfirmDeleteFile(null);
+                  await refreshVapiFiles();
+                } catch (e) {
+                  toast.error(e instanceof Error ? e.message : 'Delete failed');
+                } finally {
+                  setDeleting(false);
+                }
+              }}
+              disabled={deleting}
+            >
+              {deleting ? (<><Spinner size="sm" className="mr-2" /> Deleting…</>) : 'Delete'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      {/* Removed legacy agentRow.metadata documents preview to avoid confusion */}
     </div>
   );
 }

@@ -15,9 +15,11 @@ export async function POST(req: NextRequest) {
 
         const { data, error } = await supabase
           .from("agents")
-          .select("phone_number")
+          .select("phone_number, created_at")
           .eq("agent_id", assistantId)
-          .single();
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
         if (error) {
           console.error("Failed to fetch agent:", error);
           break;
@@ -29,7 +31,7 @@ export async function POST(req: NextRequest) {
         // Format the transcript using Gemini AI
         const formattedSummary = await formatCallSummary(transcript);
 
-        const formattedNumber = customerNumber.startsWith("+")
+        const formattedNumber = String(customerNumber).startsWith("+")
           ? customerNumber
           : `+1${customerNumber}`;
 
