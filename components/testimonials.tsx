@@ -29,31 +29,31 @@ const testimonials = [
 
 export function TestimonialsSection() {
   return (
-    <section id="testimonials" className="py-24 sm:py-32 bg-muted/30">
+    <section id="testimonials" className="py-20 sm:py-28 bg-muted/20">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance">
+          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl text-balance">
             Trusted by industry leaders
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground text-pretty">
+          <p className="mt-4 text-base sm:text-lg text-muted-foreground text-pretty">
             See how companies are transforming their customer interactions with Cogent.
           </p>
         </div>
 
-        <div className="mx-auto mt-16 max-w-6xl">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="mx-auto mt-14 max-w-6xl">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="rounded-xl">
-                <div className="p-6">
-                  <blockquote className="text-foreground">&quot;{testimonial.content}&quot;</blockquote>
-                  <div className="mt-6 flex items-center space-x-3">
+              <Card key={index} className="rounded-xl border border-border/70 shadow-none">
+                <div className="p-5">
+                  <blockquote className="text-sm sm:text-base text-foreground">&quot;{testimonial.content}&quot;</blockquote>
+                  <div className="mt-5 flex items-center gap-3">
                     <Avatar size="3" radius="full" fallback={testimonial.author.split(" ").map((n) => n[0]).join("")}
                       src={testimonial.avatar || "/placeholder.svg"}
                       alt={testimonial.author}
                     />
                     <div>
-                      <div className="font-semibold text-foreground">{testimonial.author}</div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="font-medium text-foreground">{testimonial.author}</div>
+                      <div className="text-xs text-muted-foreground">
                         {testimonial.role} at {testimonial.company}
                       </div>
                     </div>

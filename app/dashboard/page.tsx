@@ -16,17 +16,17 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-6">
-      <h1 className="text-3xl font-semibold">Dashboard</h1>
-      <section className="rounded border p-4 space-y-2">
-        <h2 className="text-lg font-medium">Your account</h2>
-        <div className="text-sm space-y-1">
+    <div className="max-w-3xl mx-auto p-6 sm:p-8 space-y-6">
+      <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Dashboard</h1>
+      <section className="rounded-xl border border-border/70 p-5 sm:p-6 space-y-3 bg-card">
+        <h2 className="text-base sm:text-lg font-medium">Your account</h2>
+        <div className="text-sm space-y-1 text-foreground">
           <p><span className="font-medium">Email:</span> {user.email}</p>
           <p><span className="font-medium">User ID:</span> {user.id}</p>
         </div>
       </section>
       <form action={signOutAction}>
-        <button type="submit" className="h-10 rounded border px-4">Sign out</button>
+        <button type="submit" className="h-10 rounded-md border border-border/70 px-4 text-sm">Sign out</button>
       </form>
     </div>
   );

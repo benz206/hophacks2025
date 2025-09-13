@@ -38,31 +38,31 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section id="features" className="py-24 sm:py-32">
+    <section id="features" className="py-20 sm:py-28">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance">
+          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl text-balance">
             Everything you need for voice automation
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground text-pretty">
+          <p className="mt-4 text-base sm:text-lg text-muted-foreground text-pretty">
             Powerful features that make voice agents indistinguishable from human representatives.
           </p>
         </div>
 
-        <div className="mx-auto mt-16 max-w-6xl">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto mt-14 max-w-6xl">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
-              <Card key={feature.title} className="hover:shadow-lg transition-shadow rounded-xl">
-                <div className="p-6">
-                  <div className="flex items-center space-x-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10">
+              <Card key={feature.title} className="rounded-xl border border-border/70 shadow-none">
+                <div className="p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-md bg-accent/10">
                       <feature.icon className="h-5 w-5 text-accent" />
                     </div>
-                    <div className="text-lg font-semibold">{feature.title}</div>
+                    <div className="text-base font-medium">{feature.title}</div>
                   </div>
                 </div>
-                <div className="px-6 pb-6">
-                  <p className="text-muted-foreground">{feature.description}</p>
+                <div className="px-5 pb-5">
+                  <p className="text-sm text-muted-foreground">{feature.description}</p>
                 </div>
               </Card>
             ))}

@@ -2,24 +2,24 @@ import { Phone } from "lucide-react"
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-muted/30">
-      <div className="container mx-auto px-4 py-12">
+    <footer className="border-t border-border bg-muted/10">
+      <div className="container mx-auto px-4 py-10">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
           <div className="lg:col-span-1">
-            <div className="flex items-center space-x-2">
-              <div className="flex items-center justify-center w-8 h-8 bg-primary rounded-lg">
-                <Phone className="h-4 w-4 text-primary-foreground" />
+            <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center w-7 h-7 bg-foreground text-background rounded-md">
+                <Phone className="h-3.5 w-3.5" />
               </div>
-              <span className="text-xl font-bold text-foreground">Cogent</span>
+              <span className="text-base font-semibold tracking-tight">Cogent</span>
             </div>
-            <p className="mt-4 text-sm text-muted-foreground">
+            <p className="mt-3 text-sm text-muted-foreground">
               Intelligent voice agents that transform customer interactions.
             </p>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-foreground">Product</h3>
-            <ul className="mt-4 space-y-2">
+            <h3 className="text-xs font-medium text-foreground">Product</h3>
+            <ul className="mt-3 space-y-2">
               <li>
                 <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
                   Features
@@ -44,8 +44,8 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-foreground">Company</h3>
-            <ul className="mt-4 space-y-2">
+            <h3 className="text-xs font-medium text-foreground">Company</h3>
+            <ul className="mt-3 space-y-2">
               <li>
                 <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
                   About
@@ -70,8 +70,8 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-foreground">Legal</h3>
-            <ul className="mt-4 space-y-2">
+            <h3 className="text-xs font-medium text-foreground">Legal</h3>
+            <ul className="mt-3 space-y-2">
               <li>
                 <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
                   Privacy
@@ -96,9 +96,9 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-border pt-8 flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-sm text-muted-foreground">© 2024 Cogent. All rights reserved.</p>
-          <div className="mt-4 sm:mt-0 flex space-x-6">
+        <div className="mt-8 border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center">
+          <p className="text-xs text-muted-foreground">© 2024 Cogent. All rights reserved.</p>
+          <div className="mt-4 sm:mt-0 flex gap-5">
             <a href="#" className="text-muted-foreground hover:text-foreground">
               <span className="sr-only">Twitter</span>
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
