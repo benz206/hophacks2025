@@ -3,7 +3,7 @@ import { createServerClient } from '@supabase/ssr';
 
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
-  const response = NextResponse.redirect(new URL('/', url.origin));
+  const response = NextResponse.redirect(new URL('/dashboard', url.origin));
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

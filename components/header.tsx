@@ -1,5 +1,6 @@
 import { Button } from "@radix-ui/themes"
 import { Phone, Menu } from "lucide-react"
+import Link from "next/link"
 
 export function Header() {
   return (
@@ -37,8 +38,12 @@ export function Header() {
         </nav>
 
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="2" className="hidden md:inline-flex">Log in</Button>
-          <Button size="2">Get Started</Button>
+          <Button variant="ghost" size="2" className="hidden md:inline-flex" asChild>
+            <Link href="/login">Log in</Link>
+          </Button>
+          <Button size="2" asChild>
+            <Link href="/login">Get Started</Link>
+          </Button>
           <Button variant="ghost" size="2" className="md:hidden" aria-label="Open menu">
             <Menu className="h-4 w-4" />
           </Button>
