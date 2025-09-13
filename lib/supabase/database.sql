@@ -1,11 +1,3 @@
--- USERS: stores the actual people who own agents
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100),          -- full name of the user
-    email VARCHAR(150),         -- optional, for login/identification
-    created_at TIMESTAMP DEFAULT NOW()
-);
-
 -- AGENTS: reusable personas linked to a user
 -- Think of this as a "template" for how the user wants to sound/behave
 CREATE TABLE agents (
