@@ -1,6 +1,10 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 
 export default function AgentsPage() {
   const [name, setName] = useState("");
@@ -11,6 +15,38 @@ export default function AgentsPage() {
   const [customerNumber, setCustomerNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
+  const [agents, setAgents] = useState<Array<any>>([]);
+  const [callNumbers, setCallNumbers] = useState<Record<string, string>>({});
+
+  async function loadAgents() {
+    try {
+      const res = await fetch('/api/agents', { method: 'GET' });
+      if (!res.ok) throw new Error('Failed to fetch agents');
+      const data = await res.json();
+      setAgents(data.agents || []);
+    } catch (err) {
+      // ignore list error in UI status; keep page functional
+    }
+  }
+
+  async function handleDeleteAgent(rowId: string) {
+    setLoading(true);
+    setStatus(null);
+    try {
+      const res = await fetch(`/api/agents/${rowId}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete agent');
+      setStatus('Agent deleted.');
+      await loadAgents();
+    } catch (err) {
+      setStatus(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadAgents();
+  }, []);
 
   async function handleCreateAgent(e: React.FormEvent) {
     e.preventDefault();
@@ -36,6 +72,8 @@ export default function AgentsPage() {
       if (!resSave.ok) throw new Error('Failed to save agent');
 
       setStatus('Assistant created and saved.');
+      // refresh list
+      loadAgents();
     } catch (err) {
       setStatus(err instanceof Error ? err.message : 'Unknown error');
     } finally {
@@ -81,59 +119,129 @@ export default function AgentsPage() {
     }
   }
 
+  async function handleRowCall(agentId: string) {
+    const number = callNumbers[agentId];
+    if (!agentId || !number) return;
+    setLoading(true);
+    setStatus(null);
+    try {
+      const res = await fetch('/api/vapi/calls', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ assistantId: agentId, customerNumber: number })
+      });
+      if (!res.ok) throw new Error('Failed to create call');
+      setStatus('Outbound call created.');
+    } catch (err) {
+      setStatus(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <div style={{ maxWidth: 560, margin: '32px auto', padding: 16 }}>
-      <h1 style={{ fontSize: 24, fontWeight: 600, marginBottom: 16 }}>Agents</h1>
-      <form onSubmit={handleCreateAgent} style={{ display: 'grid', gap: 12 }}>
-        <input
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          placeholder="First message"
-          value={firstmessage}
-          onChange={(e) => setFirstMessage(e.target.value)}
-        />
-        <textarea
-          placeholder="System prompt"
-          value={systemprompt}
-          onChange={(e) => setSystemPrompt(e.target.value)}
-          rows={4}
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? 'Creating…' : 'Create Agent'}
-        </button>
-      </form>
+    <div className="mx-auto max-w-2xl p-4">
+      <h1 className="text-2xl font-semibold mb-4">Agents</h1>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Create agent</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleCreateAgent} className="grid gap-3">
+            <div className="grid gap-1.5">
+              <Label htmlFor="name">Name</Label>
+              <Input id="name" placeholder="Support Assistant" value={name} onChange={(e) => setName(e.target.value)} />
+            </div>
+            <div className="grid gap-1.5">
+              <Label htmlFor="first">First message</Label>
+              <Input id="first" placeholder="Hello! How can I help you today?" value={firstmessage} onChange={(e) => setFirstMessage(e.target.value)} />
+            </div>
+            <div className="grid gap-1.5">
+              <Label htmlFor="system">System prompt</Label>
+              <Input id="system" placeholder="You are a friendly phone support assistant..." value={systemprompt} onChange={(e) => setSystemPrompt(e.target.value)} />
+            </div>
+            <div className="flex gap-2">
+              <Button type="submit" disabled={loading}>{loading ? 'Creating…' : 'Create Agent'}</Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Your agents</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {agents.length === 0 ? (
+            <div className="text-sm text-muted-foreground">No agents yet.</div>
+          ) : (
+            <div className="grid gap-3">
+              {agents.map((a) => (
+                <div key={a.id} className="rounded-lg border p-3">
+                  <div className="font-medium">{a?.metadata?.name ?? 'Untitled'}</div>
+                  <div className="text-xs text-muted-foreground">Agent ID: {a.agent_id}</div>
+                  <div className="mt-2">
+                    <Button variant="outline" size="sm" onClick={() => handleDeleteAgent(a.id)} disabled={loading}>Delete</Button>
+                  </div>
+                  {a.assistant ? (
+                    <div className="mt-1 text-sm">
+                      <div>Vapi Assistant: {a.assistant.name}</div>
+                      {a.assistant.firstMessage && (
+                        <div className="text-muted-foreground">First: {a.assistant.firstMessage}</div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="mt-1 text-sm text-red-600">
+                      Unable to load Vapi assistant{a.assistantError ? `: ${a.assistantError}` : ''}
+                    </div>
+                  )}
+                  <div className="mt-3 flex items-end gap-2">
+                    <div className="flex-1 grid gap-1.5">
+                      <Label htmlFor={`customer-${a.id}`}>Customer Number</Label>
+                      <Input
+                        id={`customer-${a.id}`}
+                        placeholder="+1234567890"
+                        value={callNumbers[a.agent_id] ?? ''}
+                        onChange={(e) => setCallNumbers((prev) => ({ ...prev, [a.agent_id]: e.target.value }))}
+                      />
+                    </div>
+                    <Button onClick={() => handleRowCall(a.agent_id)} disabled={loading || !callNumbers[a.agent_id]}>Call</Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {assistantId && (
-        <div style={{ marginTop: 24, display: 'grid', gap: 12 }}>
-          <div>Assistant ID: {assistantId}</div>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <input
-              placeholder="Phone Number ID"
-              value={phoneNumberId}
-              onChange={(e) => setPhoneNumberId(e.target.value)}
-            />
-            <button onClick={handlePatchPhoneNumber} disabled={loading}>
-              Patch Phone Number
-            </button>
-          </div>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <input
-              placeholder="Customer Number (+1...)"
-              value={customerNumber}
-              onChange={(e) => setCustomerNumber(e.target.value)}
-            />
-            <button onClick={handleCall} disabled={loading}>
-              Call
-            </button>
-          </div>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Actions</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-3">
+            <div className="text-sm">Assistant ID: {assistantId}</div>
+            <div className="flex gap-2 items-end">
+              <div className="flex-1 grid gap-1.5">
+                <Label htmlFor="phoneId">Phone Number ID</Label>
+                <Input id="phoneId" placeholder="phn_..." value={phoneNumberId} onChange={(e) => setPhoneNumberId(e.target.value)} />
+              </div>
+              <Button onClick={handlePatchPhoneNumber} disabled={loading}>Patch Phone Number</Button>
+            </div>
+            <div className="flex gap-2 items-end">
+              <div className="flex-1 grid gap-1.5">
+                <Label htmlFor="customer">Customer Number (+1...)</Label>
+                <Input id="customer" placeholder="+1234567890" value={customerNumber} onChange={(e) => setCustomerNumber(e.target.value)} />
+              </div>
+              <Button onClick={handleCall} disabled={loading}>Call</Button>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {status && (
-        <div style={{ marginTop: 16, color: '#444' }}>{status}</div>
+        <div className="mt-4 text-sm text-muted-foreground">{status}</div>
       )}
     </div>
   );
