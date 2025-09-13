@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@radix-ui/themes"
 import { ArrowRight, Play } from "lucide-react"
 
 export function HeroSection() {
@@ -28,11 +28,11 @@ export function HeroSection() {
           </p>
 
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
+            <Button size="3" className="bg-accent text-accent-foreground hover:bg-accent/90">
               Start Building
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <Button variant="outline" size="lg">
+            <Button variant="outline" size="3">
               <Play className="mr-2 h-4 w-4" />
               Watch Demo
             </Button>
