@@ -2,38 +2,38 @@
 import { Card } from "@/components/ui/card"
 import { AmbientGradient } from "@/components/ambient-gradient"
 
-import { Brain, Zap, Shield, BarChart3, Globe, Clock } from "lucide-react"
+import { Brain, Zap, Shield, BarChart3, Globe, Clock, Phone, Webhook, Files } from "lucide-react"
 
 const features = [
   {
     icon: Brain,
-    title: "Natural Conversations",
-    description: "Advanced AI that understands context, emotion, and intent for human-like interactions.",
+    title: "Assistants",
+    description: "Create AI agents with tools, memory, and guardrails. Deploy from the dashboard or API.",
   },
   {
-    icon: Zap,
-    title: "Lightning Fast",
-    description: "Sub-second response times with real-time processing for seamless conversations.",
-  },
-  {
-    icon: Shield,
-    title: "Enterprise Security",
-    description: "Bank-grade encryption and compliance with SOC 2, HIPAA, and GDPR standards.",
-  },
-  {
-    icon: BarChart3,
-    title: "Real-time Analytics",
-    description: "Comprehensive insights into call performance, customer satisfaction, and agent efficiency.",
+    icon: Phone,
+    title: "Calls API",
+    description: "Programmatically start, receive, and manage calls with real-time events and transcripts.",
   },
   {
     icon: Globe,
-    title: "Multi-language Support",
-    description: "Support for 40+ languages with native accent recognition and cultural context.",
+    title: "Phone Numbers",
+    description: "Provision numbers in seconds and route inbound calls to your agents.",
   },
   {
-    icon: Clock,
-    title: "24/7 Availability",
-    description: "Never miss a call with always-on voice agents that scale with your business needs.",
+    icon: Webhook,
+    title: "Webhooks",
+    description: "Subscribe to call lifecycle events and integrate with your stack reliably.",
+  },
+  {
+    icon: Files,
+    title: "File Extraction",
+    description: "Extract structured data from uploads and feed it into your agent context.",
+  },
+  {
+    icon: Zap,
+    title: "Low Latency",
+    description: "Sub‑second turn-taking for natural conversations that don’t feel robotic.",
   },
 ]
 
@@ -43,10 +43,10 @@ export function FeaturesSection() {
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl text-balance">
-            Everything you need for voice automation
+            Everything you need to launch voice agents
           </h2>
           <p className="mt-4 text-base sm:text-lg text-muted-foreground text-pretty">
-            Powerful features that make voice agents indistinguishable from human representatives.
+            Production primitives to build, connect, and operate AI voice agents—end to end.
           </p>
         </div>
 

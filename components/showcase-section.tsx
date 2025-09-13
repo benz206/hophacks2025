@@ -7,10 +7,10 @@ export function ShowcaseSection() {
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl text-balance">
-            See your agent in action
+            Build, monitor, and iterate
           </h2>
           <p className="mt-4 text-base sm:text-lg text-muted-foreground text-pretty">
-            Live transcript, analytics, and tools—built in. Ship fast with production primitives.
+            Live transcript, analytics, and tools—built in. Manage assistants and calls from the dashboard or API.
           </p>
         </div>
 
@@ -20,12 +20,10 @@ export function ShowcaseSection() {
             <div className="p-5">
               <div className="text-xs text-muted-foreground mb-3">Live Transcript</div>
               <div className="space-y-3 text-sm">
-                <TranscriptRow role="User" text="Hi, I need to reschedule my appointment." />
-                <TranscriptRow role="Agent" text="Absolutely. What date and time works best for you?" agent />
-                <TranscriptRow role="User" text="Next Tuesday in the afternoon." />
-                <TranscriptRow role="Agent" text="I found a 2:30 PM slot next Tuesday. Should I confirm it?" agent />
-                <TranscriptRow role="User" text="Yes please." />
-                <TranscriptRow role="Agent" text="Done. You’ll receive a confirmation text. Anything else I can help with?" agent />
+                <TranscriptRow role="User" text="Call the customer and check order status." />
+                <TranscriptRow role="Agent" text="Calling now. I can also email a receipt—should I?" agent />
+                <TranscriptRow role="User" text="Yes, send it and text them a survey link." />
+                <TranscriptRow role="Agent" text="Receipt emailed and SMS sent. Anything else?" agent />
               </div>
             </div>
           </Card>
@@ -35,10 +33,10 @@ export function ShowcaseSection() {
               <div className="p-5">
                 <div className="text-xs text-muted-foreground">Session Analytics</div>
                 <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
-                  <Metric label="Sentiment" value="Positive" />
-                  <Metric label="Duration" value="03:12" />
+                  <Metric label="Latency" value="320ms" />
                   <Metric label="Turns" value="12" />
-                  <Metric label="Compliance" value="99%" />
+                  <Metric label="Resolution" value="82%" />
+                  <Metric label="CSAT" value="4.8/5" />
                 </div>
               </div>
             </Card>
@@ -48,16 +46,16 @@ export function ShowcaseSection() {
                 <div className="text-xs text-muted-foreground">Tools Used</div>
                 <ul className="mt-3 space-y-2 text-sm">
                   <li className="flex items-center justify-between">
-                    <span>Calendar API</span>
-                    <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">success</span>
-                  </li>
-                  <li className="flex items-center justify-between">
                     <span>CRM Lookup</span>
                     <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">success</span>
                   </li>
                   <li className="flex items-center justify-between">
                     <span>SMS Notify</span>
                     <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">queued</span>
+                  </li>
+                  <li className="flex items-center justify-between">
+                    <span>Webhook: call.updated</span>
+                    <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">sent</span>
                   </li>
                 </ul>
               </div>
