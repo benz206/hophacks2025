@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import { getSupabaseBrowserClient } from '@/lib/supabase/client';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
@@ -37,11 +39,17 @@ export default function LoginPage() {
       if (mode === 'signin') {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        setMessage('Signed in successfully.');
+        // Navigate to dashboard on success
+        router.replace('/dashboard');
       } else {
-        const { error } = await supabase.auth.signUp({ email, password });
+        const { data, error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
-        setMessage('Account created. Check your email to confirm.');
+        if (data.session) {
+          // If email confirmation is disabled, user may be signed in immediately
+          router.replace('/dashboard');
+        } else {
+          setMessage('Account created. Check your email to confirm.');
+        }
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Authentication error';
