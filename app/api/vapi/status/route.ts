@@ -1,5 +1,6 @@
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { vapi } from "@/lib/vapi/client";
+import { formatCallSummary } from "@/lib/gemini/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -23,7 +24,10 @@ export async function POST(req: NextRequest) {
         }
 
         const customerNumber = data?.phone_number;
-        const summary = message.summary;
+        const transcript = message.transcript;
+
+        // Format the transcript using Gemini AI
+        const formattedSummary = await formatCallSummary(transcript);
 
         const formattedNumber = customerNumber.startsWith("+")
           ? customerNumber
@@ -33,7 +37,7 @@ export async function POST(req: NextRequest) {
           phoneNumberId: process.env.VAPI_PHONE_NUMBER_ID,
           customer: { number: formattedNumber },
           assistant: {
-            firstMessage: `Here's your summary: ${summary}`,
+            firstMessage: formattedSummary,
             model: {
               provider: "openai",
               model: "gpt-4o",
