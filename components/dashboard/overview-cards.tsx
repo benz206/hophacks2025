@@ -44,6 +44,17 @@ const Recharts = {
 };
 
 export function UsageChart({ data }: { data: UsagePoint[] }) {
+  // Decide which series has the greater magnitude this month
+  const maxCalls = data.length ? Math.max(...data.map((d) => d.calls)) : 0;
+  const maxMinutes = data.length ? Math.max(...data.map((d) => d.minutes)) : 0;
+  const showKey: keyof UsagePoint = maxCalls >= maxMinutes ? "calls" : "minutes";
+
+  // Stroke and fill settings
+  const strokeColor = showKey === "calls" ? "hsl(var(--primary))" : "hsl(var(--foreground))";
+  const fillId = showKey === "calls" ? "url(#areaCalls)" : "url(#areaMinutes)";
+  const lineStrokeWidth = 2; // reduced thickness
+  const areaStrokeWidth = 1.5; // reduced thickness
+
   return (
     <Card className="relative overflow-hidden">
       <AmbientGradient variant="blue" className="opacity-50" />
@@ -58,10 +69,9 @@ export function UsageChart({ data }: { data: UsagePoint[] }) {
             <Recharts.XAxis dataKey="date" tickLine={false} axisLine={false} minTickGap={24} />
             <Recharts.YAxis tickLine={false} axisLine={false} width={28} />
             <Recharts.Tooltip contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }} />
-            <Recharts.Area type="monotone" dataKey="calls" stroke="hsl(var(--primary))" fill="url(#areaCalls)" strokeWidth={2.25} />
-            <Recharts.Line type="monotone" dataKey="calls" stroke="hsl(var(--primary))" strokeWidth={3} strokeOpacity={1} dot={false} activeDot={{ r: 3.5 }} />
-            <Recharts.Area type="monotone" dataKey="minutes" stroke="hsl(var(--foreground))" fill="url(#areaMinutes)" strokeWidth={2} />
-            <Recharts.Line type="monotone" dataKey="minutes" stroke="hsl(var(--foreground))" strokeWidth={2.5} strokeOpacity={0.95} dot={false} activeDot={{ r: 3.25 }} />
+            {/* Only render the series with the greater max value */}
+            <Recharts.Area type="monotone" dataKey={showKey as any} stroke={strokeColor} fill={fillId} strokeWidth={areaStrokeWidth} />
+            <Recharts.Line type="monotone" dataKey={showKey as any} stroke={strokeColor} strokeWidth={lineStrokeWidth} strokeOpacity={1} dot={false} activeDot={{ r: 3 }} />
           </Recharts.AreaChart>
         </Recharts.ResponsiveContainer>
       </CardContent>

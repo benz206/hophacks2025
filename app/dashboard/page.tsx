@@ -17,7 +17,11 @@ export default async function DashboardPage() {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
 
-  const records = callRecords || [];
+  // Deduplicate records by call_id to avoid duplicate stats when the DB contains multiple rows
+  const records = (callRecords || []).reduce((acc: any[], r: any) => {
+    if (!acc.find((x) => x.call_id === r.call_id)) acc.push(r);
+    return acc;
+  }, []);
 
   // Resolve Vapi details for each call record
   const detailedCalls = (
@@ -71,6 +75,13 @@ export default async function DashboardPage() {
     return { date: day, calls: dayCalls.length, minutes };
   });
 
+  // Additional usage metrics
+  const peakCalls = usageData.length ? Math.max(...usageData.map((d) => d.calls)) : 0;
+  const peakMinutes = usageData.length ? Math.max(...usageData.map((d) => d.minutes)) : 0;
+  const daysElapsed = new Date().getDate();
+  const sumCallsToDate = usageData.slice(0, daysElapsed).reduce((m, d) => m + d.calls, 0);
+  const avgCallsPerDay = daysElapsed > 0 ? Math.round(sumCallsToDate / daysElapsed) : 0;
+
   // Recent calls (top 5)
   const recent = detailedCalls.slice(0, 5);
 
@@ -112,7 +123,7 @@ export default async function DashboardPage() {
           <div className="mt-4">
             <UsageChart data={usageData} />
           </div>
-          <div className="mt-4 grid grid-cols-3 gap-3 text-sm">
+          <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 text-sm">
             <div className="rounded-md border bg-muted/30 p-3">
               <div className="text-muted-foreground">Avg duration</div>
               <div className="mt-1 font-medium">{Math.round(avgDurationSec / 60)} min</div>
@@ -124,6 +135,14 @@ export default async function DashboardPage() {
             <div className="rounded-md border bg-muted/30 p-3">
               <div className="text-muted-foreground">This month</div>
               <div className="mt-1 font-medium">{monthPrefix}</div>
+            </div>
+            <div className="rounded-md border bg-muted/30 p-3">
+              <div className="text-muted-foreground">Peak calls/day</div>
+              <div className="mt-1 font-medium">{peakCalls}</div>
+            </div>
+            <div className="rounded-md border bg-muted/30 p-3">
+              <div className="text-muted-foreground">Peak minutes/day</div>
+              <div className="mt-1 font-medium">{peakMinutes}</div>
             </div>
           </div>
         </section>

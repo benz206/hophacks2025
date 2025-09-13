@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
+import { Pencil, Trash2 } from 'lucide-react';
 
 type AgentRow = {
   id: string;
@@ -312,6 +313,8 @@ export default function AgentsPage() {
           {agents.map((a) => {
             const assistant = assistantDetails[a.agent_id];
             const isLoading = loadingAssistant === a.agent_id;
+            const destValue = destNumbers[a.agent_id] ?? '';
+            const canCall = isValidPhone(destValue) && !loading;
 
             return (
               <div key={a.id} className="rounded-lg border bg-card p-4 shadow-sm">
@@ -348,30 +351,39 @@ export default function AgentsPage() {
                     )}
                   </div>
                   
-                  {/* Right Column - Buttons */}
-                  <div className="flex flex-col gap-2">
-                    {/* <Button variant="outline" size="sm" onClick={() => openEdit(a)} disabled={loading}>
-                      Edit
-                    </Button> */}
-                    {(() => {
-                      const value = destNumbers[a.agent_id] ?? '';
-                      const valid = isValidPhone(value);
-                      return (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setConfirmCallRow(a)}
-                          disabled={loading || !valid}
-                          className="bg-green-600 hover:bg-green-700 text-white border-green-600"
-                        >
-                          {loading ? <Spinner size="sm" className="mr-2" /> : null}
-                          Call
-                        </Button>
-                      );
-                    })()}
-                    <Button className='bg-red-400 hover:bg-red-500 text-white border-red-600' size="sm" onClick={() => setConfirmDeleteId(a.id)} disabled={loading}>
-                      {loading ? <Spinner size="sm" className="mr-2" /> : null}
-                      Delete
+                  {/* Top-right icon actions: edit, delete, call (phone at far right) */}
+                  <div className="flex items-center gap-1.5 ml-auto">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => openEdit(a)}
+                      disabled={loading}
+                      aria-label="Edit agent"
+                      title="Edit"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setConfirmDeleteId(a.id)}
+                      disabled={loading}
+                      aria-label="Delete agent"
+                      title="Delete"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-green-600 text-green-700 hover:bg-green-600/10"
+                      onClick={() => setConfirmCallRow(a)}
+                      disabled={!canCall}
+                      aria-label={canCall ? "Call" : "Enter a valid destination number"}
+                      title={canCall ? "Call" : "Enter a valid destination number"}
+                    >
+                      {loading ? <Spinner size="sm" className="mr-1" /> : null}
+                      Call
                     </Button>
                   </div>
                 </div>
