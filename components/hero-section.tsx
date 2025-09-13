@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Play } from "lucide-react"
 import Link from "next/link"
-import { ElectricWire } from "@/components/electric-wire"
+// import { ElectricWire } from "@/components/electric-wire"
+import { HeroBackground } from "@/components/hero-background"
 
 export function HeroSection() {
   return (
-    <section className="py-20 sm:py-28">
+    <section className="py-20 sm:py-32 relative">
+      <HeroBackground />
 
       <div className="container mx-auto px-4 relative">
         <div className="mx-auto max-w-4xl text-center">
@@ -15,21 +17,21 @@ export function HeroSection() {
           </div>
 
           <h1 className="text-4xl font-semibold tracking-tight sm:text-6xl text-balance">
-            Voice agents that <span className="text-gradient">handle calls</span> like humans
+            Build unforgettable <span className="text-gradient">voice agents</span> in minutes
           </h1>
 
           <p className="mt-5 text-base sm:text-lg leading-7 text-muted-foreground max-w-2xl mx-auto text-pretty">
-            Deploy intelligent voice agents that understand context, handle complex conversations, and elevate customer experiences at scale.
+            Realtime, human-grade conversations. Sub‑second latency, tools, memory, and analytics—so you can launch production voice experiences fast.
           </p>
 
           <div className="mt-8 flex items-center justify-center gap-x-3">
-            <Button className="px-5" asChild>
+            <Button className="px-5 shadow-sm hover:shadow" asChild>
               <Link href="/dashboard">
                 Start Building
                 <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" strokeWidth={1.75} />
               </Link>
             </Button>
-            <Button variant="ghost" asChild>
+            <Button variant="ghost" className="hover:bg-accent/50" asChild>
               <Link href="/demo">
                 <Play className="mr-2 h-4 w-4" aria-hidden="true" strokeWidth={1.75} />
                 Watch Demo
@@ -45,7 +47,7 @@ export function HeroSection() {
           {/* Hero visual */}
           <div className="mt-14 relative">
             <div className="mx-auto max-w-4xl">
-              <div className="relative rounded-xl bg-card border border-border p-6 shadow-sm">
+              <div className="relative rounded-2xl bg-card border border-border p-6 shadow-sm">
                 <div className="relative">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
@@ -79,6 +81,20 @@ export function HeroSection() {
                         <span className="text-sm text-muted-foreground">Technical Support - Line 3</span>
                       </div>
                       <span className="text-xs text-muted-foreground">Available</span>
+                    </div>
+                  </div>
+                  <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                    <div className="rounded-lg border p-3">
+                      <div className="text-xs text-muted-foreground">Latency</div>
+                      <div className="mt-1 text-lg font-medium">320ms</div>
+                    </div>
+                    <div className="rounded-lg border p-3">
+                      <div className="text-xs text-muted-foreground">CSAT</div>
+                      <div className="mt-1 text-lg font-medium">4.8/5</div>
+                    </div>
+                    <div className="rounded-lg border p-3">
+                      <div className="text-xs text-muted-foreground">Resolution</div>
+                      <div className="mt-1 text-lg font-medium">82%</div>
                     </div>
                   </div>
                 </div>

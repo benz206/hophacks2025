@@ -127,6 +127,21 @@
 }
 
 @layer utilities {
+  .animate-blob {
+    animation: blob 12s infinite;
+  }
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+  @keyframes blob {
+    0% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(20px, -30px) scale(1.05); }
+    66% { transform: translate(-25px, 20px) scale(0.98); }
+    100% { transform: translate(0px, 0px) scale(1); }
+  }
   .text-gradient {
     @apply bg-clip-text text-transparent;
     background-image: linear-gradient(
