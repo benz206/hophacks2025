@@ -1,34 +1,43 @@
 "use client"
 
 import * as React from "react"
-import * as RadixSwitch from "@radix-ui/react-switch"
 import { cn } from "@/lib/utils"
 
-const Switch = React.forwardRef<
-  React.ElementRef<typeof RadixSwitch.Root>,
-  React.ComponentPropsWithoutRef<typeof RadixSwitch.Root>
->(({ className, ...props }, ref) => (
-  <RadixSwitch.Root
-    ref={ref}
-    className={cn(
-      "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-      "disabled:cursor-not-allowed disabled:opacity-50",
-      "data-[state=checked]:bg-accent bg-muted",
-      className
-    )}
-    {...(props as any)}
-  >
-    <RadixSwitch.Thumb
+type SwitchProps = {
+  checked?: boolean
+  onCheckedChange?: (value: boolean) => void
+} & React.ButtonHTMLAttributes<HTMLButtonElement>
+
+function Switch({ className, checked = false, onCheckedChange, disabled, ...props }: SwitchProps) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-disabled={disabled}
+      disabled={disabled}
+      data-slot="switch"
+      onClick={(e) => {
+        props.onClick?.(e)
+        onCheckedChange?.(!checked)
+      }}
       className={cn(
-        "pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform",
-        "translate-x-0.5 data-[state=checked]:translate-x-[22px]"
+        "inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none",
+        "disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
+        checked ? "bg-primary" : "bg-input dark:bg-input/80",
+        className
       )}
-    />
-  </RadixSwitch.Root>
-))
-Switch.displayName = RadixSwitch.Root.displayName
+      {...props}
+    >
+      <span
+        data-slot="switch-thumb"
+        className={cn(
+          "pointer-events-none block size-4 rounded-full ring-0 transition-transform",
+          checked ? "translate-x-[calc(100%-2px)] bg-primary-foreground" : "translate-x-0 bg-foreground dark:bg-foreground"
+        )}
+      />
+    </button>
+  )
+}
 
 export { Switch }
-
-

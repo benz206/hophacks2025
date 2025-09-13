@@ -2,8 +2,9 @@ import { Phone } from "lucide-react"
 import Link from "next/link"
 
 export function Footer() {
+  const year = new Date().getFullYear()
   return (
-    <footer className="border-t border-border bg-muted/10">
+    <footer className="border-t border-border bg-background">
       <div className="container mx-auto px-4 py-10">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           <div className="lg:col-span-1">
@@ -46,7 +47,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-xs text-muted-foreground">© 2024 Cogent. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground">© {year} Cogent. All rights reserved.</p>
           <div className="mt-4 sm:mt-0 flex gap-5">
             <a href="#" className="text-muted-foreground hover:text-foreground">
               <span className="sr-only">Twitter</span>

@@ -52,7 +52,7 @@ export function FeaturesSection() {
         <div className="mx-auto mt-14 max-w-6xl">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
-              <Card key={feature.title} className="rounded-xl border border-border/70 shadow-none">
+              <Card key={feature.title} className="rounded-xl border border-border shadow-none">
                 <div className="p-5">
                   <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-md bg-accent/10">

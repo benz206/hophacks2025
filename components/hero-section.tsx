@@ -4,9 +4,7 @@ import Link from "next/link"
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden py-24 sm:py-28">
-      {/* Subtle background wash */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(40%_50%_at_50%_0%,hsl(0_0%_100%/_0.8),transparent)]" />
+    <section className="py-20 sm:py-28">
 
       <div className="container mx-auto px-4 relative">
         <div className="mx-auto max-w-4xl text-center">
