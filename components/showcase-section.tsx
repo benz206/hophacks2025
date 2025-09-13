@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card"
 import { AmbientGradient } from "@/components/ambient-gradient"
+import { TypewriterText } from "@/components/ui/typewriter"
 
 export function ShowcaseSection() {
   return (
@@ -72,7 +73,11 @@ function TranscriptRow({ role, text, agent = false }: { role: string; text: stri
     <div className="grid grid-cols-[80px_1fr] items-start gap-3">
       <div className="text-xs text-muted-foreground mt-1">{role}</div>
       <div className={agent ? "rounded-lg bg-accent/30 border border-border px-3 py-2" : "rounded-lg bg-muted px-3 py-2"}>
-        <span className={agent ? "text-foreground" : "text-foreground"}>{text}</span>
+        {agent ? (
+          <TypewriterText text={text} />
+        ) : (
+          <span className="text-foreground">{text}</span>
+        )}
       </div>
     </div>
   )

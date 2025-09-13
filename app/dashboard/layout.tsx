@@ -58,6 +58,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </div>
       </aside>
       <div className="flex flex-col min-h-screen">
+        <div className="border-b px-4 py-2 flex items-center justify-end md:hidden">
+          <ThemeToggle />
+        </div>
         <main className="p-4">{children}</main>
       </div>
     </div>

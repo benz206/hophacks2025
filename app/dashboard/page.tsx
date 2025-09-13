@@ -3,6 +3,7 @@ import { getSupabaseServerClient } from '@/lib/supabase/server';
 import { StatCard } from '@/components/dashboard/overview-cards';
 import Link from 'next/link';
 import { vapi } from '@/lib/vapi/client';
+import { UsageChart } from '@/components/dashboard/overview-cards';
 
 export default async function DashboardPage() {
   const supabase = await getSupabaseServerClient();
@@ -59,6 +60,17 @@ export default async function DashboardPage() {
     ? Math.round(completedWithDuration.reduce((m, c) => m + c.durationSec, 0) / completedWithDuration.length)
     : 0;
 
+  // Build per-day dataset for current month
+  const now = new Date();
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const usageData = Array.from({ length: daysInMonth }, (_, i) => {
+    const day = String(i + 1).padStart(2, '0');
+    const dateKey = `${monthPrefix}-${day}`;
+    const dayCalls = monthCalls.filter((c) => (c.startedAt || '').slice(0, 10) === `${dateKey}`);
+    const minutes = Math.round(dayCalls.reduce((m, c) => m + c.durationSec, 0) / 60);
+    return { date: day, calls: dayCalls.length, minutes };
+  });
+
   // Recent calls (top 5)
   const recent = detailedCalls.slice(0, 5);
 
@@ -97,6 +109,9 @@ export default async function DashboardPage() {
         <section className="rounded-xl border p-5 bg-card">
           <h2 className="text-base sm:text-lg font-medium">Usage</h2>
           <p className="mt-1 text-sm text-muted-foreground">You used {totalMinutes} minutes across {totalCalls} calls this month.</p>
+          <div className="mt-4">
+            <UsageChart data={usageData} />
+          </div>
           <div className="mt-4 grid grid-cols-3 gap-3 text-sm">
             <div className="rounded-md border bg-muted/30 p-3">
               <div className="text-muted-foreground">Avg duration</div>
