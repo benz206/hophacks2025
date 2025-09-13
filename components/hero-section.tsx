@@ -38,9 +38,9 @@ export function HeroSection() {
           </div>
 
           {/* Decorative electric wire */}
-          <div className="mt-10 hidden sm:block">
+          {/* <div className="mt-10 hidden sm:block">
             <ElectricWire />
-          </div>
+          </div> */}
 
           {/* Hero visual */}
           <div className="mt-14 relative">
