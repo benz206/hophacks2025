@@ -6,9 +6,11 @@ export default function CallsPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">Calls</h1>
       </div>
-      <div className="rounded-xl border p-5 bg-card text-sm text-muted-foreground">No calls to display.</div>
+      {/* Client table renders fake data */}
+      <CallsClient />
     </div>
   );
 }
+import CallsClient from "./client";
 
 
