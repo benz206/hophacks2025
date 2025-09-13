@@ -22,7 +22,7 @@ export function Footer() {
             <h3 className="text-xs font-medium text-foreground">Product</h3>
             <ul className="mt-3 space-y-2">
               <li>
-                <Link href="#features" className="text-sm text-muted-foreground hover:text-foreground">
+                <Link href="/#features" className="text-sm text-muted-foreground hover:text-foreground">
                   Features
                 </Link>
               </li>

@@ -15,27 +15,27 @@ export function Header() {
         </div>
 
         <nav className="hidden md:flex items-center gap-6">
-          <a
-            href="#features"
+          <Link
+            href="/#features"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             Features
-          </a>
-          <a
-            href="#testimonials"
+          </Link>
+          <Link
+            href="/#testimonials"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             Testimonials
-          </a>
-          <a
+          </Link>
+          <Link
             href="/pricing"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             Pricing
-          </a>
-          <a href="/docs" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          </Link>
+          <Link href="/docs" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             Docs
-          </a>
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2">

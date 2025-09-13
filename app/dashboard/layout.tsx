@@ -1,34 +1,70 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Home, Bot, Phone, Settings, LogOut } from "lucide-react";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const supabase = await getSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
+  const NavLink = ({ href, children, icon: Icon, isActive }: { href: string; children: React.ReactNode; icon: React.ElementType; isActive: boolean }) => (
+    <Link
+      href={href}
+      className={cn(
+        "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
+        isActive ? "bg-accent/20 text-foreground" : "text-muted-foreground hover:bg-accent/10 hover:text-foreground"
+      )}
+    >
+      <Icon className="h-4 w-4" />
+      <span>{children}</span>
+    </Link>
+  );
+
+  // Determine active path on server using headers().pathname is not available here,
+  // but Next will mark active via startsWith using request.url in middleware. As a
+  // lightweight approach, rely on Link styling on client as well.
+
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-[240px_1fr]">
-      <aside className="border-r bg-muted/10 p-4 space-y-4 hidden md:block">
-        <div className="text-sm font-semibold">Cogent</div>
-        <nav className="space-y-1 text-sm">
-          <Link href="/dashboard" className="block rounded px-2 py-1 hover:bg-muted">Overview</Link>
-          <Link href="/dashboard/agents" className="block rounded px-2 py-1 hover:bg-muted">Agents</Link>
-          <Link href="/dashboard/calls" className="block rounded px-2 py-1 hover:bg-muted">Calls</Link>
-          <Link href="/dashboard/settings" className="block rounded px-2 py-1 hover:bg-muted">Settings</Link>
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-[220px_1fr]">
+      <aside className="border-r bg-muted/10 px-3 py-4 hidden md:flex md:flex-col">
+        <div className="px-2 py-1 text-sm font-semibold">Cogent</div>
+        <nav className="mt-2 grid gap-1">
+          {/* Overview */}
+          {/* Active styles will be applied on client by Next <Link> prefetch state; keep server neutral */}
+          <NavLink href="/dashboard" icon={Home} isActive={false}>Overview</NavLink>
+          <NavLink href="/dashboard/agents" icon={Bot} isActive={false}>Agents</NavLink>
+          <NavLink href="/dashboard/calls" icon={Phone} isActive={false}>Calls</NavLink>
+          <NavLink href="/dashboard/settings" icon={Settings} isActive={false}>Settings</NavLink>
         </nav>
-      </aside>
-      <div className="flex flex-col min-h-screen">
-        <header className="border-b bg-background/80 backdrop-blur-sm p-4 flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">Dashboard</div>
+        <div className="mt-auto pt-4">
           <form action={async () => {
             'use server'
             const supabase = await getSupabaseServerClient();
             await supabase.auth.signOut();
             redirect('/');
           }}>
-            <button type="submit" className="h-8 rounded border px-3 text-xs">Sign out</button>
+            <Button variant="ghost" size="sm" className="w-full justify-start">
+              <LogOut className="mr-2 h-4 w-4" /> Sign out
+            </Button>
           </form>
+        </div>
+      </aside>
+      <div className="flex flex-col min-h-screen">
+        <header className="border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 py-3 flex items-center justify-between">
+          <div className="text-sm text-muted-foreground">Dashboard</div>
+          <div className="md:hidden">
+            <form action={async () => {
+              'use server'
+              const supabase = await getSupabaseServerClient();
+              await supabase.auth.signOut();
+              redirect('/');
+            }}>
+              <Button variant="outline" size="sm">Sign out</Button>
+            </form>
+          </div>
         </header>
         <main className="p-4">{children}</main>
       </div>
