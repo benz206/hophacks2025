@@ -42,3 +42,34 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const supabase = await getSupabaseServerClient();
+    const {
+      data: { user },
+      error: userError
+    } = await supabase.auth.getUser();
+    if (userError) return NextResponse.json({ error: userError.message }, { status: 401 });
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    const { id } = await params;
+    if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
+
+    const body = await req.json();
+    const { metadata } = body as { metadata?: unknown };
+
+    const { data, error } = await supabase
+      .from('agents')
+      .update({ metadata })
+      .eq('id', id)
+      .eq('user_id', user.id)
+      .select('*')
+      .single();
+    if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+    return NextResponse.json({ agent: data }, { status: 200 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}

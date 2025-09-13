@@ -13,11 +13,27 @@ type AssistantSummary = {
   firstMessage?: string;
 } | null;
 
+type AgentMetadata = {
+  documents?: AgentDocument[];
+  [key: string]: unknown;
+};
+
+type AgentDocument = {
+  id: string;
+  name: string;
+  path?: string;
+  bucket?: string;
+  geminiFileUri?: string;
+  markdown: string;
+  uploadedAt: string;
+};
+
 type AgentRow = {
   id: string;
   agent_id: string;
   assistant?: AssistantSummary;
   assistantError?: string;
+  metadata?: AgentMetadata;
 };
 
 export default function AgentsPage() {
@@ -37,6 +53,14 @@ export default function AgentsPage() {
   const [destNumbers, setDestNumbers] = useState<Record<string, string>>({});
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [confirmCallRow, setConfirmCallRow] = useState<AgentRow | null>(null);
+  const [createUploading, setCreateUploading] = useState(false);
+  const [createUploadedMarkdown, setCreateUploadedMarkdown] = useState<string | null>(null);
+  const [createUploadPrompt, setCreateUploadPrompt] = useState<string>("");
+  const [createSelectedFile, setCreateSelectedFile] = useState<File | null>(null);
+  const [editUploadingFile, setEditUploadingFile] = useState(false);
+  const [editUploadedMarkdown, setEditUploadedMarkdown] = useState<string | null>(null);
+  const [editUploadPrompt, setEditUploadPrompt] = useState<string>("");
+  const [editSelectedFile, setEditSelectedFile] = useState<File | null>(null);
 
   const sanitizePhoneInput = (val: string) => val.replace(/\D/g, '').slice(0, 10);
   const isValidPhone = (val: string) => /^\d{10}$/.test(val);
@@ -116,6 +140,28 @@ export default function AgentsPage() {
       toast.error(err instanceof Error ? err.message : 'Failed to create assistant');
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function extractFileToMarkdown(file: File, prompt: string, setBusy: (v: boolean) => void, setMd: (v: string) => void) {
+    try {
+      setBusy(true);
+      setMd("");
+      const fd = new FormData();
+      fd.append('file', file);
+      if (prompt) fd.append('prompt', prompt);
+      const res = await fetch('/api/files/extract', { method: 'POST', body: fd });
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j.error || 'Failed to extract');
+      }
+      const j = await res.json();
+      setMd(j.markdown || '');
+      toast.success('File processed');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Upload failed');
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -224,6 +270,45 @@ export default function AgentsPage() {
                 <Label htmlFor="system">System prompt</Label>
                 <Input id="system" placeholder="You are a friendly phone support assistant..." value={systemprompt} onChange={(e) => setSystemPrompt(e.target.value)} />
               </div>
+              {/* Create: Document Upload */}
+              <div className="grid gap-1.5 mt-2">
+                <Label htmlFor="create-upload-prompt">Extraction prompt (optional)</Label>
+                <Input id="create-upload-prompt" placeholder="e.g., Extract key facts, entities, and summarize sections" value={createUploadPrompt} onChange={(e) => setCreateUploadPrompt(e.target.value)} />
+              </div>
+              <div className="grid gap-1.5">
+                <Label htmlFor="create-file">Attach file</Label>
+                <Input id="create-file" type="file" className="cursor-pointer" onChange={(e) => setCreateSelectedFile(e.target.files?.[0] ?? null)} />
+              </div>
+              <div className="flex justify-end">
+                <Button type="button" variant="outline" onClick={async () => {
+                  if (!createSelectedFile) {
+                    toast.error('Please choose a file');
+                    return;
+                  }
+                  await extractFileToMarkdown(createSelectedFile, createUploadPrompt, setCreateUploading, (md) => {
+                    setCreateUploadedMarkdown(md);
+                    // Insert into system prompt directly
+                    setSystemPrompt((prev) => (prev ? `${prev}\n\n${md}` : md));
+                  });
+                }} disabled={createUploading || !createSelectedFile}>
+                  {createUploading ? (
+                    <>
+                      <Spinner size="sm" className="mr-2" />
+                      Uploading...
+                    </>
+                  ) : (
+                    'Upload & Extract'
+                  )}
+                </Button>
+              </div>
+              {createUploadedMarkdown ? (
+                <div className="mt-1">
+                  <Label>Extracted Markdown</Label>
+                  <div className="mt-2 rounded-md border bg-background p-3 max-h-48 overflow-auto text-sm whitespace-pre-wrap">
+                    {createUploadedMarkdown}
+                  </div>
+                </div>
+              ) : null}
               <div className="flex gap-2 justify-end">
                 <Button type="button" variant="outline" onClick={() => setCreateOpen(false)} disabled={loading}>Cancel</Button>
                 <Button type="submit" disabled={loading}>
@@ -247,6 +332,8 @@ export default function AgentsPage() {
           {status}
         </div>
       )}
+
+      {/* Global uploader removed in favor of per-agent uploads */}
 
       {initialLoading ? (
         <div className="flex items-center justify-center py-12">
@@ -294,6 +381,17 @@ export default function AgentsPage() {
                     );
                   })()}
                 </div>
+                {/* Per-agent document upload */}
+                <div className="space-y-2 mt-2">
+                  <Label className="text-sm font-medium">Agent documents</Label>
+                  <PerAgentUploader agentRow={a} />
+                </div>
+                {/* Show last extracted markdown summary (collapsed preview) */}
+                {a.metadata?.lastExtractedMarkdown ? (
+                  <div className="rounded-md border bg-background p-2 text-xs max-h-32 overflow-auto whitespace-pre-wrap">
+                    {String(a.metadata.lastExtractedMarkdown).slice(0, 800)}{String(a.metadata.lastExtractedMarkdown).length > 800 ? '…' : ''}
+                  </div>
+                ) : null}
               </div>
               <div className="mt-4 flex items-center justify-between gap-2">
                 <Button variant="destructive" size="sm" onClick={() => setConfirmDeleteId(a.id)} disabled={loading}>
@@ -406,6 +504,45 @@ export default function AgentsPage() {
               <Label htmlFor="edit-system">System prompt</Label>
               <Input id="edit-system" value={editSystem} onChange={(e) => setEditSystem(e.target.value)} />
             </div>
+            {/* Edit: Document Upload */}
+            <div className="grid gap-1.5 mt-2">
+              <Label htmlFor="edit-upload-prompt">Extraction prompt (optional)</Label>
+              <Input id="edit-upload-prompt" placeholder="e.g., Extract key facts, entities, and summarize sections" value={editUploadPrompt} onChange={(e) => setEditUploadPrompt(e.target.value)} />
+            </div>
+            <div className="grid gap-1.5">
+              <Label htmlFor="edit-file">Attach file</Label>
+              <Input id="edit-file" type="file" className="cursor-pointer" onChange={(e) => setEditSelectedFile(e.target.files?.[0] ?? null)} />
+            </div>
+            <div className="flex justify-end">
+              <Button type="button" variant="outline" onClick={async () => {
+                if (!editSelectedFile) {
+                  toast.error('Please choose a file');
+                  return;
+                }
+                await extractFileToMarkdown(editSelectedFile, editUploadPrompt, setEditUploadingFile, (md) => {
+                  setEditUploadedMarkdown(md);
+                  // Insert into edit system prompt directly
+                  setEditSystem((prev) => (prev ? `${prev}\n\n${md}` : md));
+                });
+              }} disabled={editUploadingFile || !editSelectedFile}>
+                {editUploadingFile ? (
+                  <>
+                    <Spinner size="sm" className="mr-2" />
+                    Uploading...
+                  </>
+                ) : (
+                  'Upload & Extract'
+                )}
+              </Button>
+            </div>
+            {editUploadedMarkdown ? (
+              <div className="mt-1">
+                <Label>Extracted Markdown</Label>
+                <div className="mt-2 rounded-md border bg-background p-3 max-h-48 overflow-auto text-sm whitespace-pre-wrap">
+                  {editUploadedMarkdown}
+                </div>
+              </div>
+            ) : null}
             {/* Destination number is per-call; not saved on assistant */}
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setEditOpen(false)} disabled={loading}>Cancel</Button>
@@ -423,6 +560,96 @@ export default function AgentsPage() {
           </div>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+function PerAgentUploader({ agentRow }: { agentRow: AgentRow }) {
+  const [files, setFiles] = useState<FileList | null>(null);
+  const [prompt, setPrompt] = useState<string>("");
+  const [busy, setBusy] = useState(false);
+
+  async function run() {
+    if (!files || files.length === 0) return;
+    try {
+      setBusy(true);
+      const collected: AgentDocument[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files.item(i)!;
+        const fd = new FormData();
+        fd.append('file', file);
+        if (prompt) fd.append('prompt', prompt);
+        const res = await fetch('/api/files/extract', { method: 'POST', body: fd });
+        if (!res.ok) {
+          const j = await res.json().catch(() => ({}));
+          throw new Error(j.error || 'Failed to extract');
+        }
+        const j = await res.json();
+        const doc: AgentDocument = {
+          id: `${Date.now()}-${i}`,
+          name: file.name,
+          markdown: j.markdown || '',
+          uploadedAt: new Date().toISOString(),
+        };
+        collected.push(doc);
+      }
+
+      const combined = collected.map((d) => d.markdown).join('\n\n');
+      const resAssistant = await fetch(`/api/vapi/assistants/${agentRow.agent_id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ systemprompt: combined })
+      });
+      if (!resAssistant.ok) {
+        const jj = await resAssistant.json().catch(() => ({}));
+        throw new Error(jj.error || 'Failed to update assistant prompt');
+      }
+
+      const existingDocs = Array.isArray(agentRow.metadata?.documents) ? agentRow.metadata?.documents as AgentDocument[] : [];
+      const nextDocs = [...collected, ...existingDocs];
+      const saveMeta = await fetch(`/api/agents/${agentRow.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ metadata: { ...(agentRow.metadata ?? {}), documents: nextDocs, lastExtractedMarkdown: collected[0]?.markdown || '' } })
+      });
+      if (!saveMeta.ok) {
+        const jj2 = await saveMeta.json().catch(() => ({}));
+        throw new Error(jj2.error || 'Failed to save preview to agent');
+      }
+      toast.success('Assistant prompt updated with extracted text');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Upload failed');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="grid gap-2">
+      <Input placeholder="Extraction prompt (optional)" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+      <Input type="file" multiple className="cursor-pointer" onChange={(e) => setFiles(e.target.files)} />
+      <div className="flex justify-end">
+        <Button size="sm" variant="outline" onClick={run} disabled={busy || !files || files.length === 0}>
+          {busy ? (<><Spinner size="sm" className="mr-1" /> Processing...</>) : 'Upload & Extract'}
+        </Button>
+      </div>
+      <div className="grid gap-2">
+        {Array.isArray(agentRow.metadata?.documents) && (agentRow.metadata!.documents as AgentDocument[]).length > 0 ? (
+          (agentRow.metadata!.documents as AgentDocument[]).map((doc) => (
+            <div key={doc.id} className="rounded-md border bg-background p-2 text-xs">
+              <div className="flex items-center justify-between gap-2">
+                <div className="font-medium truncate cursor-pointer" title={doc.name}>{doc.name}</div>
+                <div className="text-muted-foreground text-[10px]">{new Date(doc.uploadedAt).toLocaleString()}</div>
+              </div>
+              <div className="mt-2 max-h-32 overflow-auto whitespace-pre-wrap">
+                {doc.markdown.slice(0, 1200)}{doc.markdown.length > 1200 ? '…' : ''}
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-xs text-muted-foreground">No documents yet</div>
+        )}
+      </div>
     </div>
   );
 }

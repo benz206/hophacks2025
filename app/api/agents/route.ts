@@ -55,7 +55,7 @@ export async function GET() {
 
     const { data, error } = await supabase
       .from('agents')
-      .select('id, agent_id, created_at, updated_at')
+      .select('id, agent_id, created_at, updated_at, metadata')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false });
 
