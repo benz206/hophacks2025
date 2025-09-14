@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { vapi } from "@/lib/vapi/client";
 import { getMapToolIds } from "@/lib/vapi/map-tools";
+import { allBrowserTools } from "@/lib/vapi/browser-tool";
 
 export async function POST(req: NextRequest) {
   try {
@@ -39,6 +40,24 @@ export async function POST(req: NextRequest) {
       // Continue without map tools - they can be added later
     }
 
+    // Get browser tool IDs to include in the assistant
+    let browserToolIds: string[] = [];
+    try {
+      const allTools = await vapi.tools.list();
+      const browserToolNames = allBrowserTools.map(tool => tool.function.name);
+      const browserTools = allTools.filter((tool: any) => 
+        browserToolNames.includes(tool.function?.name)
+      );
+      browserToolIds = browserTools.map((tool: any) => tool.id);
+      console.log("Browser tool IDs found:", browserToolIds);
+    } catch (error) {
+      console.warn(
+        "Could not get browser tool IDs (tools may not be created yet):",
+        error
+      );
+      // Continue without browser tools - they can be added later
+    }
+
     const assistant = await vapi.assistants.create({
       name,
       firstMessage: firstmessage,
@@ -73,13 +92,19 @@ You have access to the following tools:
 - find_closest_location (to find nearby businesses, restaurants, services, etc.)
 - find_route (to get directions and route information between locations)
 - get_location_info (to get detailed information about specific places)
+- browser_automation (to automate browser tasks using AI - ask user for task description)
 
             Use these tools when appropriate to successfully complete the user's tasks.
             
             For location-based requests:
             - When finding closest locations, ask for their current location and what they're looking for
             - When getting directions, ask for both starting point and destination
-            - Provide clear, helpful information and automatically send detailed results via email 
+            - Provide clear, helpful information and automatically send detailed results via email
+            
+            For browser automation requests:
+            - Ask the user to describe the specific task they want performed in the browser
+            - Examples: "search for restaurants", "book a flight", "check weather", "order food online"
+            - The system will automatically perform the browser actions to complete the task 
 
               IMPORTANT TRANSFER RULES:
               - Use transferCall ONLY when there are problems or issues during the call
@@ -122,8 +147,8 @@ You have access to the following tools:
               ]
             : []),
         ],
-        // Include map tools if available
-        toolIds: mapToolIds.length > 0 ? mapToolIds : undefined,
+        // Include map tools and browser tools if available
+        toolIds: [...mapToolIds, ...browserToolIds].length > 0 ? [...mapToolIds, ...browserToolIds] : undefined,
       },
     });
 

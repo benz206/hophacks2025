@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Loader2, MapPin, Route, Info, Trash2, RefreshCw, Plus } from 'lucide-react';
+import { Loader2, MapPin, Route, Info, Trash2, RefreshCw, Plus, Globe } from 'lucide-react';
 
 type VAPITool = {
   id: string;
@@ -74,6 +74,8 @@ export default function VAPIToolsPage() {
         return <Route className="h-5 w-5" />;
       case 'get_location_info':
         return <Info className="h-5 w-5" />;
+      case 'browser_automation':
+        return <Globe className="h-5 w-5" />;
       default:
         return <MapPin className="h-5 w-5" />;
     }
@@ -87,8 +89,10 @@ export default function VAPIToolsPage() {
         return 'Get directions and route information';
       case 'get_location_info':
         return 'Get detailed information about locations';
+      case 'browser_automation':
+        return 'Automate browser tasks using AI';
       default:
-        return 'Google Maps integration tool';
+        return 'Integration tool';
     }
   };
 
@@ -105,7 +109,7 @@ export default function VAPIToolsPage() {
       <div>
         <h1 className="text-2xl font-bold">VAPI Tools Management</h1>
         <p className="text-muted-foreground">
-          Manage your custom Google Maps tools for VAPI assistants.
+          Manage your custom tools for VAPI assistants including Google Maps and browser automation.
         </p>
       </div>
 
@@ -202,7 +206,7 @@ export default function VAPIToolsPage() {
             <MapPin className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">No VAPI Tools Found</h3>
             <p className="text-muted-foreground mb-4">
-              Create Google Maps tools to enable location features in your VAPI assistants.
+              Create tools to enable location features and browser automation in your VAPI assistants.
             </p>
             <Button onClick={() => handleToolAction('create')}>
               <Plus className="mr-2 h-4 w-4" />
@@ -215,7 +219,7 @@ export default function VAPIToolsPage() {
       {/* Information Card */}
       <Card>
         <CardHeader>
-          <CardTitle>About Google Maps Tools</CardTitle>
+          <CardTitle>About VAPI Tools</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
@@ -242,11 +246,19 @@ export default function VAPIToolsPage() {
             </p>
           </div>
           
+          <div>
+            <h4 className="font-medium mb-2">🌐 Browser Automation</h4>
+            <p className="text-sm text-muted-foreground">
+              Automate browser tasks using AI. Users can describe any web-based task and the system 
+              will perform the necessary browser actions to complete it.
+            </p>
+          </div>
+          
           <div className="bg-muted/50 p-4 rounded-lg">
             <h4 className="font-medium mb-2">📧 Email Integration</h4>
             <p className="text-sm text-muted-foreground">
               All tools can send detailed results to the user's email address using your SMTP configuration. 
-              The assistant will ask for the user's email when providing location services.
+              The assistant will ask for the user's email when providing services.
             </p>
           </div>
         </CardContent>

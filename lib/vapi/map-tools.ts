@@ -7,15 +7,15 @@ export const findClosestLocationTool = {
     description:
       "Find the closest businesses, places, or points of interest near a user's location. Results are sent to the user's email if provided.",
     parameters: {
-      type: "object",
+      type: "object" as const,
       properties: {
         searchQuery: {
-          type: "string",
+          type: "string" as const,
           description:
             "What to search for (e.g., 'restaurants', 'gas stations', 'hospitals', 'coffee shops')",
         },
         userLocation: {
-          type: "string",
+          type: "string" as const,
           description: "User's current location (address, city, or landmark)",
         },
       },
@@ -34,18 +34,18 @@ export const findRouteTool = {
     description:
       "Get turn-by-turn directions and route information between two locations. Detailed directions are sent to the user's email if provided.",
     parameters: {
-      type: "object",
+      type: "object" as const,
       properties: {
         origin: {
-          type: "string",
+          type: "string" as const,
           description: "Starting location (address, city, or landmark)",
         },
         destination: {
-          type: "string",
+          type: "string" as const,
           description: "Destination location (address, city, or landmark)",
         },
         travelMode: {
-          type: "string",
+          type: "string" as const,
           enum: ["driving", "walking", "bicycling", "transit"],
           description: "Mode of transportation (default: driving)",
         },
@@ -65,10 +65,10 @@ export const locationInfoTool = {
     description:
       "Get detailed information about a specific location including address, phone, website, hours, and ratings. Information is sent to the user's email if provided.",
     parameters: {
-      type: "object",
+      type: "object" as const,
       properties: {
         locationQuery: {
-          type: "string",
+          type: "string" as const,
           description:
             "Location name, business name, or address to get information about",
         },
@@ -81,10 +81,17 @@ export const locationInfoTool = {
   },
 };
 
+import { allBrowserTools } from './browser-tool';
+
 export const allMapTools = [
   findClosestLocationTool,
   findRouteTool,
   locationInfoTool,
+];
+
+export const allTools = [
+  ...allMapTools,
+  ...allBrowserTools,
 ];
 
 /**
