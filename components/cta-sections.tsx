@@ -20,7 +20,7 @@ export function CTASection() {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
-            <Button variant="ghost" className="inline-flex items-center" asChild>
+            <Button variant="outline" className="inline-flex items-center" asChild>
               <Link href="/demo">Watch Demo</Link>
             </Button>
           </div>

@@ -28,12 +28,12 @@ export function HeroSection() {
             <Button className="px-5 shadow-sm hover:shadow" asChild>
               <Link href="/dashboard">
                 Start Building
-                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" strokeWidth={1.75} />
+                <ArrowRight className="ml-2 h-4 w-4" aria-hidden={true} strokeWidth={1.75} />
               </Link>
             </Button>
-            <Button variant="ghost" className="hover:bg-accent/50" asChild>
+            <Button variant="outline" className="hover:bg-accent/50" asChild>
               <Link href="/demo">
-                <Play className="mr-2 h-4 w-4" aria-hidden="true" strokeWidth={1.75} />
+                <Play className="mr-2 h-4 w-4" aria-hidden={true} strokeWidth={1.75} />
                 Watch Demo
               </Link>
             </Button>

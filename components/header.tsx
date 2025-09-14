@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "./theme-toggle"
-import { Phone, Sparkles, Star, Tag } from "lucide-react"
+import { Home, Phone, Sparkles, Tag } from "lucide-react"
 import Link from "next/link"
 
 export function Header() {
@@ -15,13 +15,13 @@ export function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
+          <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Home className="h-3.5 w-3.5" aria-hidden="true" />
+            Home
+          </Link>
           <Link href="/#features" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
             Features
-          </Link>
-          <Link href="/#testimonials" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
-            <Star className="h-3.5 w-3.5" aria-hidden="true" />
-            Testimonials
           </Link>
           <Link href="/pricing" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <Tag className="h-3.5 w-3.5" aria-hidden="true" />
