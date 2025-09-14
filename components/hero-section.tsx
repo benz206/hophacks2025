@@ -3,8 +3,25 @@ import { ArrowRight, Play } from "lucide-react"
 import Link from "next/link"
 // import { ElectricWire } from "@/components/electric-wire"
 import { HeroBackground } from "@/components/hero-background"
+import { StatCard, UsageChart } from "@/components/dashboard/overview-cards"
+import { AmbientGradient } from "@/components/ambient-gradient"
 
 export function HeroSection() {
+  // Fake monthly usage data to mirror dashboard chart
+  const usageData = [
+    { date: "01", calls: 2, minutes: 6 },
+    { date: "02", calls: 3, minutes: 7 },
+    { date: "03", calls: 1, minutes: 3 },
+    { date: "04", calls: 5, minutes: 12 },
+    { date: "05", calls: 4, minutes: 10 },
+    { date: "06", calls: 6, minutes: 15 },
+    { date: "07", calls: 3, minutes: 8 },
+    { date: "08", calls: 7, minutes: 18 },
+    { date: "09", calls: 5, minutes: 12 },
+    { date: "10", calls: 8, minutes: 20 },
+    { date: "11", calls: 4, minutes: 9 },
+    { date: "12", calls: 6, minutes: 14 },
+  ]
   return (
     <section className="py-20 sm:py-32 relative">
       <HeroBackground />
@@ -38,16 +55,10 @@ export function HeroSection() {
               </Link>
             </Button>
           </div>
-
-          {/* Decorative electric wire */}
-          {/* <div className="mt-10 hidden sm:block">
-            <ElectricWire />
-          </div> */}
-
-          {/* Hero visual */}
           <div className="mt-14 relative">
-            <div className="mx-auto max-w-4xl">
+            <div className="mx-auto max-w-[1600px]">
               <div className="relative rounded-2xl bg-card border border-border p-6 shadow-sm">
+                <AmbientGradient variant="blue" className="opacity-60" />
                 <div className="relative">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
@@ -55,48 +66,70 @@ export function HeroSection() {
                       <div className="w-2.5 h-2.5 bg-yellow-500 rounded-full" />
                       <div className="w-2.5 h-2.5 bg-green-500 rounded-full" />
                     </div>
-                    <div className="text-xs text-muted-foreground">Live Call Dashboard</div>
+                    <div className="text-xs text-muted-foreground">Overview</div>
                   </div>
 
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-background rounded-lg border">
-                      <div className="flex items-center gap-3">
-                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                        <span className="text-sm font-medium">Customer Support - Line 1</span>
-                      </div>
-                      <span className="text-xs text-muted-foreground">2:34 active</span>
-                    </div>
-
-                    <div className="flex items-center justify-between p-3 bg-background rounded-lg border">
-                      <div className="flex items-center gap-3">
-                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                        <span className="text-sm font-medium">Sales Inquiry - Line 2</span>
-                      </div>
-                      <span className="text-xs text-muted-foreground">1:12 active</span>
-                    </div>
-
-                    <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full" />
-                        <span className="text-sm text-muted-foreground">Technical Support - Line 3</span>
-                      </div>
-                      <span className="text-xs text-muted-foreground">Available</span>
-                    </div>
+                  {/* Overview metrics (hardcoded) to match dashboard StatCards */}
+                  <div className="grid gap-4 md:grid-cols-4">
+                    <StatCard label="Total calls" value="128" hint="All calls this month" accent="violet" />
+                    <StatCard label="Minutes" value="342" hint="This month" accent="blue" />
+                    <StatCard label="Avg duration" value="2m" hint="Per successful call" accent="sunset" />
+                    <StatCard label="Success rate" value="82%" hint="Completed vs total" />
                   </div>
-                  <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                    <div className="rounded-lg border p-3">
-                      <div className="text-xs text-muted-foreground">Latency</div>
-                      <div className="mt-1 text-lg font-medium">320ms</div>
-                    </div>
-                    <div className="rounded-lg border p-3">
-                      <div className="text-xs text-muted-foreground">CSAT</div>
-                      <div className="mt-1 text-lg font-medium">4.8/5</div>
-                    </div>
-                    <div className="rounded-lg border p-3">
-                      <div className="text-xs text-muted-foreground">Resolution</div>
-                      <div className="mt-1 text-lg font-medium">82%</div>
-                    </div>
+
+                  {/* Mirror dashboard layout: Recent calls + Usage */}
+                  <div className="mt-4 grid gap-4 md:grid-cols-2">
+                    <section className="rounded-xl border p-5 bg-card">
+                      <div className="flex items-center justify-between">
+                        <h2 className="text-base sm:text-lg font-medium">Recent calls</h2>
+                        <Link href="/dashboard/calls" className="text-sm text-primary underline">View all</Link>
+                      </div>
+                      <div className="mt-3 space-y-3">
+                        <div className="flex items-center justify-between rounded-lg border bg-muted/30 px-3 py-2 text-sm">
+                          <div className="flex items-center gap-3">
+                            <div className="font-medium">Support Assistant</div>
+                            <div className="text-muted-foreground">→ +1 555‑123‑4567</div>
+                          </div>
+                          <div className="text-muted-foreground">2m ago</div>
+                        </div>
+                        <div className="flex items-center justify-between rounded-lg border bg-muted/30 px-3 py-2 text-sm">
+                          <div className="flex items-center gap-3">
+                            <div className="font-medium">Sales Assistant</div>
+                            <div className="text-muted-foreground">→ +1 555‑987‑6543</div>
+                          </div>
+                          <div className="text-muted-foreground">5m ago</div>
+                        </div>
+                        <div className="flex items-center justify-between rounded-lg border bg-muted/30 px-3 py-2 text-sm">
+                          <div className="flex items-center gap-3">
+                            <div className="font-medium">Tech Support</div>
+                            <div className="text-muted-foreground">→ +1 555‑000‑1212</div>
+                          </div>
+                          <div className="text-muted-foreground">12m ago</div>
+                        </div>
+                      </div>
+                    </section>
+                    <section className="rounded-xl border p-5 bg-card">
+                      <h2 className="text-base sm:text-lg font-medium">Usage</h2>
+                      <p className="mt-1 text-sm text-muted-foreground">You used 342 minutes across 128 calls this month.</p>
+                      <div className="mt-4">
+                        <UsageChart data={usageData} />
+                      </div>
+                      <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 overflow-auto">
+                        <div className="rounded-md border bg-muted/30 p-3 min-w-[180px]">
+                          <div className="text-xs text-muted-foreground whitespace-nowrap">Avg duration</div>
+                          <div className="mt-1 text-base font-semibold whitespace-nowrap">2 min</div>
+                          <div className="mt-0.5 text-[10px] text-muted-foreground">Per successful call</div>
+                        </div>
+                        <div className="rounded-md border bg-muted/30 p-3 min-w-[180px]">
+                          <div className="text-xs text-muted-foreground whitespace-nowrap">Success rate</div>
+                          <div className="mt-1 text-base font-semibold whitespace-nowrap">82%</div>
+                          <div className="mt-0.5 text-[10px] text-muted-foreground">Completed vs total</div>
+                        </div>
+                      </div>
+                    </section>
                   </div>
+
+                  {/* End dashboard mirror */}
                 </div>
               </div>
             </div>
