@@ -13,15 +13,15 @@ export function HeroSection() {
         <div className="mx-auto max-w-4xl text-center">
           {/* Announcement */}
           <div className="mb-6 inline-flex items-center rounded-full border border-border bg-background/70 px-3 py-1 text-xs">
-            <span className="text-muted-foreground">✨ New: Calls API + Phone numbers</span>
+            <span className="text-muted-foreground">✨ Now live: Dashboard, Webhooks, and File Extraction</span>
           </div>
 
           <h1 className="text-4xl font-semibold tracking-tight sm:text-6xl text-balance">
-            Ship production <span className="text-gradient">voice agents</span>
+            Save your time with <span className="text-gradient">voice agents</span>
           </h1>
 
           <p className="mt-5 text-base sm:text-lg leading-7 text-muted-foreground max-w-2xl mx-auto text-pretty">
-            Assistants, Calls, Phone Numbers, Webhooks, and File Extraction—backed by sub‑second latency and a live dashboard. Build in minutes, go live with confidence.
+            Assistants, Calls, Phone Numbers, Files, and Webhooks—backed by sub‑second latency, live analytics, and a Supabase‑backed dashboard. OpenAI on calls, Gemini for summaries. Build in minutes, go live with confidence.
           </p>
 
           <div className="mt-8 flex items-center justify-center gap-x-3">

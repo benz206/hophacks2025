@@ -41,7 +41,7 @@ export function ShowcaseSection() {
             Build, monitor, and iterate
           </h2>
           <p className="mt-4 text-base sm:text-lg text-muted-foreground text-pretty">
-            Live transcript, analytics, and tools—built in. Manage assistants and calls from the dashboard or API.
+            Live transcript, analytics, and tools—built in. Gemini call summaries and a Supabase‑backed dashboard.
           </p>
         </div>
 
@@ -76,16 +76,28 @@ export function ShowcaseSection() {
                 <div className="text-xs text-muted-foreground">Tools Used</div>
                 <ul className="mt-3 space-y-2 text-sm">
                   <li className="flex items-center justify-between">
-                    <span>CRM Lookup</span>
+                    <span>SMS</span>
                     <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">success</span>
                   </li>
                   <li className="flex items-center justify-between">
-                    <span>SMS Notify</span>
+                    <span>DTMF</span>
+                    <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">success</span>
+                  </li>
+                  <li className="flex items-center justify-between">
+                    <span>API Request: checkOrderStatus</span>
+                    <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">success</span>
+                  </li>
+                  <li className="flex items-center justify-between">
+                    <span>Google Calendar: availability.check</span>
                     <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">queued</span>
                   </li>
                   <li className="flex items-center justify-between">
-                    <span>Webhook: call.updated</span>
-                    <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">sent</span>
+                    <span>Google Calendar: event.create</span>
+                    <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">success</span>
+                  </li>
+                  <li className="flex items-center justify-between">
+                    <span>Transfer Call</span>
+                    <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">idle</span>
                   </li>
                 </ul>
               </div>

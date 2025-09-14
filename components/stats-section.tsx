@@ -31,7 +31,7 @@ const stats: Stat[] = [
   { label: "Avg latency", value: 320, suffix: "ms" },
   { label: "Setup to first call", value: 5, suffix: "min" },
   { label: "Automated resolution", value: 82, suffix: "%" },
-  { label: "Numbers provisioned", value: 1, suffix: "+" },
+  { label: "Supported tools", value: 6 },
 ]
 
 export function StatsSection() {
