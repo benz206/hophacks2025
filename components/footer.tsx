@@ -1,6 +1,7 @@
 import { Phone } from "lucide-react"
 import Link from "next/link"
 import { AmbientGradient } from "@/components/ambient-gradient"
+import Image from "next/image"
 
 export function Footer() {
   const year = new Date().getFullYear()
@@ -12,9 +13,8 @@ export function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center w-8 h-8 bg-foreground text-background rounded-md">
-                <Phone className="h-4 w-4" aria-hidden="true" strokeWidth={1.75} />
-              </div>
+              <Image src="/blacklogo.png" alt="Hermes" width={28} height={28} className="block dark:hidden" />
+              <Image src="/whitelogo.png" alt="Hermes" width={28} height={28} className="hidden dark:block" />
               <span className="text-base font-semibold tracking-tight">Hermes</span>
             </div>
             <p className="mt-3 max-w-sm text-sm leading-6 text-muted-foreground">

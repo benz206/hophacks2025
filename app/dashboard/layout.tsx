@@ -34,7 +34,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <aside className="border-r bg-muted/10 px-3 py-4 hidden md:flex md:flex-col">
         <div className="mt-2 flex justify-between">
           <Link href="/" className="px-2 py-1 flex items-center gap-2 group">
-            <Image src="/logo.png" alt="Hermes." width={32} height={32} />
+            <Image src="/blacklogo.png" alt="Hermes" width={32} height={32} className="block dark:hidden" />
+            <Image src="/whitelogo.png" alt="Hermes" width={32} height={32} className="hidden dark:block" />
             <span className="text-lg font-semibold tracking-tight">Hermes</span>
           </Link>
           <ThemeToggle />

@@ -1,16 +1,16 @@
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "./theme-toggle"
-import { Home, Phone, Sparkles, Tag, LogIn } from "lucide-react"
+import { Home, Sparkles, Tag, LogIn } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-7 h-7 bg-foreground text-background rounded-md">
-            <Phone className="h-3.5 w-3.5" aria-hidden="true" strokeWidth={1.75} />
-          </div>
+          <Image src="/blacklogo.png" alt="Hermes" width={28} height={28} className="block dark:hidden" />
+          <Image src="/whitelogo.png" alt="Hermes" width={28} height={28} className="hidden dark:block" />
           <span className="text-base font-semibold tracking-tight">Hermes</span>
         </Link>
 
