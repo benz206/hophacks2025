@@ -1,0 +1,4 @@
+playwright
+uvicorn
+fastapi
+browser-use
