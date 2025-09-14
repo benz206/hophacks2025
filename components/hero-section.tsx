@@ -5,6 +5,9 @@ import Link from "next/link"
 import { HeroBackground } from "@/components/hero-background"
 import { StatCard, UsageChart } from "@/components/dashboard/overview-cards"
 import { AmbientGradient } from "@/components/ambient-gradient"
+import AgentsDemo from "@/components/dashboard/agents-demo"
+import { CallsTable } from "@/components/dashboard/calls-table"
+import { fakeCalls } from "@/lib/fake-data"
 
 export function HeroSection() {
   // Fake monthly usage data to mirror dashboard chart
@@ -132,6 +135,17 @@ export function HeroSection() {
                   {/* End dashboard mirror */}
                 </div>
               </div>
+            </div>
+            {/* Embedded demos below the hero mirror */}
+            <div className="mx-auto max-w-[1600px] mt-10 space-y-8 text-left">
+              <section className="space-y-3">
+                <h2 className="text-lg font-medium">Agents</h2>
+                <AgentsDemo />
+              </section>
+              <section className="space-y-3">
+                <h2 className="text-lg font-medium">Calls</h2>
+                <CallsTable calls={fakeCalls} />
+              </section>
             </div>
           </div>
         </div>
