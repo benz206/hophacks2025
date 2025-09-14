@@ -114,13 +114,13 @@ export function HeroSection() {
                       <div className="mt-4">
                         <UsageChart data={usageData} />
                       </div>
-                      <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 overflow-auto">
-                        <div className="rounded-md border bg-muted/30 p-3 min-w-[180px]">
+                      <div className="mt-4 grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-4">
+                        <div className="rounded-md border bg-muted/30 p-3">
                           <div className="text-xs text-muted-foreground whitespace-nowrap">Avg duration</div>
                           <div className="mt-1 text-base font-semibold whitespace-nowrap">2 min</div>
                           <div className="mt-0.5 text-[10px] text-muted-foreground">Per successful call</div>
                         </div>
-                        <div className="rounded-md border bg-muted/30 p-3 min-w-[180px]">
+                        <div className="rounded-md border bg-muted/30 p-3">
                           <div className="text-xs text-muted-foreground whitespace-nowrap">Success rate</div>
                           <div className="mt-1 text-base font-semibold whitespace-nowrap">82%</div>
                           <div className="mt-0.5 text-[10px] text-muted-foreground">Completed vs total</div>

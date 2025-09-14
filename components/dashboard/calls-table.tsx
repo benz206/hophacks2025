@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { Call } from "@/lib/fake-data";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+// Removed Dialog import since we use a side Sheet for details
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,8 @@ export function CallsTable({ calls }: CallsTableProps) {
   const [assistantDetails, setAssistantDetails] = React.useState<Record<string, any>>({});
   const [loadingAssistant, setLoadingAssistant] = React.useState<string | null>(null);
   const [selectedCall, setSelectedCall] = React.useState<Call | null>(null);
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
+  const [sheetOpen, setSheetOpen] = React.useState(false);
   
   const filtered = React.useMemo(() => {
     return calls.filter((c) =>
@@ -58,7 +60,8 @@ export function CallsTable({ calls }: CallsTableProps) {
     if (assistantId) {
       fetchAssistantDetails(assistantId);
     }
-    setOpen(true);
+    // Use side sheet to "pop out" details
+    setSheetOpen(true);
   };
 
   return (
@@ -104,20 +107,17 @@ export function CallsTable({ calls }: CallsTableProps) {
           </tbody>
         </table>
       </div>
-      {/* Central Dialog for selected call */}
-      <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) setSelectedCall(null); }}>
-        <DialogContent className="max-w-3xl sm:max-w-4xl w-[92vw]">
+      {/* Side Sheet for selected call */}
+      <Sheet open={sheetOpen} onOpenChange={(o) => { setSheetOpen(o); if (!o) setSelectedCall(null); }}>
+        <SheetContent side="right" className="w-[92vw] sm:w-[560px]">
           {selectedCall ? (
             <>
-              <DialogHeader>
-                <DialogTitle>
+              <SheetHeader>
+                <SheetTitle>
                   Call from {assistantDetails[(selectedCall as any).vapiData?.assistantId]?.name || 'Assistant'} → {selectedCall.customerNumber}
-                </DialogTitle>
-                <DialogDescription>
-                  {selectedCall.customerNumber}
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4 text-sm max-h-[70vh] overflow-y-auto scrollbar-styled">
+                </SheetTitle>
+              </SheetHeader>
+              <div className="space-y-4 text-sm h-[calc(100vh-8rem)] overflow-y-auto scrollbar-styled pr-1">
                 {/* Basic Info */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -272,8 +272,8 @@ export function CallsTable({ calls }: CallsTableProps) {
               </div>
             </>
           ) : null}
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
