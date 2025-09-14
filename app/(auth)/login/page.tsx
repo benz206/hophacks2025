@@ -8,10 +8,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useThemeAppearance } from "@/components/theme-provider";
-import { HeroBackground } from "@/components/hero-background";
+import { SectionBackground } from "@/components/section-background";
 import { Eye, EyeOff, Github, Lock, Mail, CheckCircle2 } from "lucide-react";
 
 type AuthTab = "signin" | "signup" | "magic";
+
+function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" {...props}>
+      <path
+        fill="currentColor"
+        d="M12 12.545h10.545c.091.545.182 1.273.182 2.182 0 4.455-2.909 7.636-7.091 7.636-4.273 0-7.818-3.545-7.818-7.909s3.545-7.909 7.818-7.909c2.182 0 3.818.727 5.091 1.818l-2.182 2.182c-.545-.364-1.636-1.091-2.909-1.091-2.636 0-4.909 2.182-4.909 5 0 2.818 2.273 5 4.909 5 2.273 0 3.636-1.364 4.091-3.182h-4.091v-2.727z"
+      />
+    </svg>
+  );
+}
 
 export default function LoginPage() {
   const router = useRouter();
@@ -86,8 +97,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground">
-      <div className="relative">
-        <HeroBackground />
+      <SectionBackground>
         <div className="container mx-auto px-4 py-10">
           <div className="grid min-h-[80dvh] items-center gap-10 lg:grid-cols-2">
             <div className="hidden lg:block">
@@ -241,21 +251,23 @@ export default function LoginPage() {
                   <div className="grid gap-3">
                     <Button
                       variant="outline"
-                      className={`w-full justify-start ${isDark ? "border-neutral-800 bg-background text-foreground hover:bg-neutral-900" : "border-neutral-200 bg-background text-foreground hover:bg-neutral-50"}`}
+                      className={`w-full grid grid-cols-[1.25rem_1fr_1.25rem] items-center gap-0 ${isDark ? "border-neutral-800 bg-background text-foreground hover:bg-neutral-900" : "border-neutral-200 bg-background text-foreground hover:bg-neutral-50"}`}
                       disabled={loading}
                       onClick={() => signInWithOAuth("google")}
                     >
-                      <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-sm bg-muted text-xs">G</span>
-                      Continue with Google
+                      <span className="flex items-center justify-center"><GoogleIcon className="h-4 w-4" /></span>
+                      <span className="text-center">Continue with Google</span>
+                      <span aria-hidden="true" className="block w-5 h-5" />
                     </Button>
                     <Button
                       variant="outline"
-                      className={`w-full justify-start ${isDark ? "border-neutral-800 bg-background text-foreground hover:bg-neutral-900" : "border-neutral-200 bg-background text-foreground hover:bg-neutral-50"}`}
+                      className={`w-full grid grid-cols-[1.25rem_1fr_1.25rem] items-center gap-0 ${isDark ? "border-neutral-800 bg-background text-foreground hover:bg-neutral-900" : "border-neutral-200 bg-background text-foreground hover:bg-neutral-50"}`}
                       disabled={loading}
                       onClick={() => signInWithOAuth("github")}
                     >
-                      <Github className="mr-2 h-4 w-4" aria-hidden="true" />
-                      Continue with GitHub
+                      <span className="flex items-center justify-center"><Github className="h-4 w-4" aria-hidden="true" /></span>
+                      <span className="text-center">Continue with GitHub</span>
+                      <span aria-hidden="true" className="block w-5 h-5" />
                     </Button>
                   </div>
 
@@ -269,7 +281,7 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
-      </div>
+      </SectionBackground>
     </div>
   );
 }

@@ -38,6 +38,14 @@ export type Profile = {
   };
 };
 
+export type DemoAgent = {
+  id: string;
+  name: string;
+  firstMessage: string;
+  phoneNumber?: string;
+  createdAt: string;
+};
+
 function daysAgo(days: number): string {
   const d = new Date();
   d.setDate(d.getDate() - days);
@@ -124,7 +132,7 @@ export const fakeUsage: UsageSummary = {
 };
 
 export const fakeProfile: Profile = {
-  organization: "Cogent Labs",
+  organization: "Hermes Labs",
   email: "you@example.com",
   phoneNumber: "+1 202-555-0147",
   notifications: {
@@ -136,5 +144,29 @@ export const fakeProfile: Profile = {
     apiKeyMasked: "sk_live_••••••••••••••••ABCD",
   },
 };
+
+export const demoAgents: DemoAgent[] = [
+  {
+    id: "ag_01",
+    name: "Support Assistant",
+    firstMessage: "Hi! How can I help you today?",
+    phoneNumber: "+1 202-555-0101",
+    createdAt: daysAgo(10),
+  },
+  {
+    id: "ag_02",
+    name: "Sales Concierge",
+    firstMessage: "Great to meet you! Want to hear about pricing?",
+    phoneNumber: "+1 415-555-0198",
+    createdAt: daysAgo(21),
+  },
+  {
+    id: "ag_03",
+    name: "Tech Support",
+    firstMessage: "Let's troubleshoot together. What's the issue?",
+    phoneNumber: "+1 646-555-0112",
+    createdAt: daysAgo(35),
+  },
+];
 
 

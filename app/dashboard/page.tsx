@@ -91,10 +91,10 @@ export default async function DashboardPage() {
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-4">
-        <StatCard label="Total calls" value={String(totalCalls)} hint="All calls this month" accent="violet" />
-        <StatCard label="Minutes" value={String(totalMinutes)} hint="This month" accent="blue" />
-        <StatCard label="Avg duration" value={`${Math.round(avgDurationSec / 60)}m`} hint="Per successful call" accent="sunset" />
-        <StatCard label="Success rate" value={`${successRatePct}%`} hint="Completed vs total" />
+        <StatCard label="Total calls" value={String(totalCalls)} hint="All calls this month" accent="emerald" />
+        <StatCard label="Minutes" value={String(totalMinutes)} hint="This month" accent="violet" />
+        <StatCard label="Avg duration" value={`${Math.round(avgDurationSec / 60)}m`} hint="Per successful call" accent="blue" />
+        <StatCard label="Success rate" value={`${successRatePct}%`} hint="Completed vs total" accent="sunset" />
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <section className="rounded-xl border p-5 bg-card">

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Check } from "lucide-react";
 
-export const metadata = { title: "Pricing • Cogent" };
+export const metadata = { title: "Pricing • Hermes" };
 
 export default function PricingPage() {
   return (
@@ -26,7 +26,7 @@ export default function PricingPage() {
           <Card className="relative h-full p-6 sm:p-7 flex flex-col border-foreground/10 hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 shrink-0 snap-center min-w-[85%] sm:min-w-[70%] md:min-w-0">
             <AmbientGradient seed="pricing-starter" />
             <div className="mt-2 flex items-center justify-between gap-2">
-              <h2 className="text-lg font-medium">Starter</h2>
+              <h2 className="text-lg font-medium">Free</h2>
               <div className="inline-block rounded border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs">Free</div>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">For testing and prototypes</p>
@@ -65,16 +65,16 @@ export default function PricingPage() {
           </Card>
 
           <Card className="relative overflow-hidden p-6 sm:p-7 border-primary/50 ring-1 ring-primary/25 flex flex-col h-full shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 md:order-3 shrink-0 snap-center min-w-[85%] sm:min-w-[70%] md:min-w-0">
-            <AmbientGradient seed="pricing-growth" />
+            <AmbientGradient seed="pricing-pro" />
             <div className="mt-2 flex items-center justify-between gap-2">
-              <h2 className="text-lg font-medium">Growth</h2>
+              <h2 className="text-lg font-medium">Pro</h2>
               <div className="inline-block rounded border border-primary/30 bg-primary/10 px-2 py-0.5 text-xs">Most popular</div>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">For growing teams</p>
-            <div className="mt-6 text-3xl font-semibold">$99<span className="text-base font-normal text-muted-foreground">/mo</span></div>
+            <div className="mt-6 text-3xl font-semibold">$20<span className="text-base font-normal text-muted-foreground">/mo</span></div>
             <ul className="mt-4 space-y-2 text-sm">
-              <li className="flex items-start gap-2"><Check className="mt-0.5 size-4 text-primary" />Up to 5 agents</li>
-              <li className="flex items-start gap-2"><Check className="mt-0.5 size-4 text-primary" />5,000 minutes/month</li>
+              <li className="flex items-start gap-2"><Check className="mt-0.5 size-4 text-primary" />Up to 3 agents</li>
+              <li className="flex items-start gap-2"><Check className="mt-0.5 size-4 text-primary" />1,000 minutes/month</li>
               <li className="flex items-start gap-2"><Check className="mt-0.5 size-4 text-primary" />Analytics dashboard</li>
               <li className="flex items-start gap-2"><Check className="mt-0.5 size-4 text-primary" />Priority support</li>
             </ul>

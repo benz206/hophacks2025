@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cogent",
+  title: "Hermes",
   description: "Modern voice automation platform",
 };
 

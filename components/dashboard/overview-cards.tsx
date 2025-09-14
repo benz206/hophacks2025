@@ -5,19 +5,20 @@ import dynamic from "next/dynamic";
 import * as React from "react";
 import { AmbientGradient } from "@/components/ambient-gradient";
 import { cn } from "@/lib/utils";
+import { useThemeAppearance } from "@/components/theme-provider";
 
 type StatCardProps = {
   label: string;
   value: string;
   hint?: string;
-  accent?: "violet" | "blue" | "sunset";
+  accent?: "violet" | "blue" | "sunset" | "emerald";
   className?: string;
 };
 
 export function StatCard({ label, value, hint, accent = "violet", className }: StatCardProps) {
   return (
     <Card className={cn("relative overflow-hidden", className)}>
-      <AmbientGradient variant={accent} className="opacity-70" />
+      <AmbientGradient variant={accent} className="opacity-80" />
       <CardHeader className="relative">
         <CardTitle className="text-sm text-muted-foreground">{label}</CardTitle>
       </CardHeader>
@@ -44,16 +45,18 @@ const Recharts = {
 };
 
 export function UsageChart({ data }: { data: UsagePoint[] }) {
+  const { appearance } = useThemeAppearance();
+  const isDark = appearance === "dark";
   // Decide which series has the greater magnitude this month
   const maxCalls = data.length ? Math.max(...data.map((d) => d.calls)) : 0;
   const maxMinutes = data.length ? Math.max(...data.map((d) => d.minutes)) : 0;
   const showKey: keyof UsagePoint = maxCalls >= maxMinutes ? "calls" : "minutes";
 
   // Stroke and fill settings
-  const strokeColor = showKey === "calls" ? "hsl(var(--primary))" : "hsl(var(--foreground))";
-  const fillId = showKey === "calls" ? "url(#areaCalls)" : "url(#areaMinutes)";
-  const lineStrokeWidth = 2; // reduced thickness
-  const areaStrokeWidth = 1.5; // reduced thickness
+  const strokeColor = isDark ? "rgba(255,255,255,0.92)" : "rgba(0,0,0,0.82)";
+  const fillId = "url(#areaNeutral)";
+  const lineStrokeWidth = 1.25; // thinner, but still visible
+  const areaStrokeWidth = 0.75; // subtle outline for the area
 
   return (
     <Card className="relative overflow-hidden">
@@ -64,14 +67,14 @@ export function UsageChart({ data }: { data: UsagePoint[] }) {
       <CardContent className="relative h-56">
         <Recharts.ResponsiveContainer width="100%" height="100%">
           <Recharts.AreaChart data={data} margin={{ left: 8, right: 8, top: 4, bottom: 0 }}>
-            <Rechartsdefs />
+            <Rechartsdefs isDark={isDark} />
             <Recharts.CartesianGrid strokeDasharray="3 3" className="stroke-border" />
             <Recharts.XAxis dataKey="date" tickLine={false} axisLine={false} minTickGap={24} />
             <Recharts.YAxis tickLine={false} axisLine={false} width={28} />
             <Recharts.Tooltip contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }} />
             {/* Only render the series with the greater max value */}
-            <Recharts.Area type="monotone" dataKey={showKey as any} stroke={strokeColor} fill={fillId} strokeWidth={areaStrokeWidth} />
-            <Recharts.Line type="monotone" dataKey={showKey as any} stroke={strokeColor} strokeWidth={lineStrokeWidth} strokeOpacity={1} dot={false} activeDot={{ r: 3 }} />
+            <Recharts.Area type="monotone" dataKey={showKey as any} stroke={strokeColor} fill={fillId} strokeWidth={areaStrokeWidth} strokeOpacity={0.85} />
+            <Recharts.Line type="monotone" dataKey={showKey as any} stroke={strokeColor} strokeWidth={lineStrokeWidth} strokeOpacity={1} dot={false} activeDot={{ r: 2.5 }} />
           </Recharts.AreaChart>
         </Recharts.ResponsiveContainer>
       </CardContent>
@@ -79,17 +82,13 @@ export function UsageChart({ data }: { data: UsagePoint[] }) {
   );
 }
 
-function Rechartsdefs() {
+function Rechartsdefs({ isDark = false }: { isDark?: boolean }) {
   return (
     <svg>
       <defs>
-        <linearGradient id="areaCalls" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.22} />
-          <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0.04} />
-        </linearGradient>
-        <linearGradient id="areaMinutes" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="hsl(var(--muted-foreground))" stopOpacity={0.12} />
-          <stop offset="100%" stopColor="hsl(var(--muted-foreground))" stopOpacity={0.03} />
+        <linearGradient id="areaNeutral" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={isDark ? "rgba(255,255,255,0.18)" : "rgba(0,0,0,0.12)"} />
+          <stop offset="100%" stopColor={isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)"} />
         </linearGradient>
       </defs>
     </svg>

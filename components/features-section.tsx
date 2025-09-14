@@ -35,6 +35,16 @@ const features = [
     title: "Low Latency",
     description: "Sub‑second turn-taking for natural conversations that don’t feel robotic.",
   },
+  {
+    icon: BarChart3,
+    title: "Live Analytics",
+    description: "Track transcripts, outcomes, and session metrics from the dashboard.",
+  },
+  {
+    icon: Clock,
+    title: "Calendar & Scheduling",
+    description: "Use tools for availability checks and event creation via Google Calendar.",
+  },
 ]
 
 export function FeaturesSection() {
