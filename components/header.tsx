@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "./theme-toggle"
-import { Home, Phone, Sparkles, Tag } from "lucide-react"
+import { Home, Phone, Sparkles, Tag, LogIn } from "lucide-react"
 import Link from "next/link"
 
 export function Header() {
@@ -33,7 +33,10 @@ export function Header() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <Button className="hidden md:inline-flex ml-1 md:ml-2" asChild>
-            <Link href="/login">Log in</Link>
+            <Link href="/login" className="inline-flex items-center gap-1.5">
+              <LogIn className="h-4 w-4" aria-hidden="true" />
+              Log in
+            </Link>
           </Button>
         </div>
       </div>
