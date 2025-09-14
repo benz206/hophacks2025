@@ -60,7 +60,7 @@ export function HeroSection() {
           </div>
           <div className="mt-14 relative">
             <div className="mx-auto max-w-[1600px]">
-              <div className="relative rounded-2xl bg-card border border-border p-6 shadow-sm">
+              <div className="relative rounded-2xl bg-card border border-border p-6 shadow-sm overflow-hidden">
                 <AmbientGradient variant="blue" className="opacity-60" />
                 <div className="relative">
                   <div className="flex items-center justify-between mb-4">
