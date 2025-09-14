@@ -4,19 +4,33 @@ import { getSupabaseServerClient } from '@/lib/supabase/server';
 
 export async function POST(req: NextRequest) {
   try {
-    const { assistantId, customerNumber } = await req.json();
+    const body = await req.json();
+    console.log('VAPI Call Request Body:', body);
+    
+    const { assistantId, customerNumber } = body;
     
     // Better error logging
     if (!assistantId) {
-      return NextResponse.json({ error: 'Missing assistantId' }, { status: 400 });
+      console.error('Missing assistantId in request:', body);
+      return NextResponse.json({ 
+        error: 'Missing assistantId', 
+        received: body,
+        required: ['assistantId', 'customerNumber']
+      }, { status: 400 });
     }
     if (!customerNumber) {
-      return NextResponse.json({ error: 'Missing customerNumber' }, { status: 400 });
+      console.error('Missing customerNumber in request:', body);
+      return NextResponse.json({ 
+        error: 'Missing customerNumber',
+        received: body,
+        required: ['assistantId', 'customerNumber']
+      }, { status: 400 });
     }
     if (!process.env.VAPI_PHONE_NUMBER_ID) {
       return NextResponse.json({ error: 'VAPI_PHONE_NUMBER_ID environment variable not set' }, { status: 500 });
     }
     const formattedNumber = customerNumber.startsWith('+') ? customerNumber : `+1${customerNumber}`;
+    console.log('Formatted phone number:', formattedNumber);
     
     const supabase = await getSupabaseServerClient();
     const {
@@ -29,13 +43,21 @@ export async function POST(req: NextRequest) {
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
-    // Create call in Vapi
-    const call = await vapi.calls.create({
-      assistantId,
-      phoneNumberId: process.env.VAPI_PHONE_NUMBER_ID,
-      customer: { number: formattedNumber }
-    });
+    
+    let call;
+    try {
+      call = await vapi.calls.create({
+        assistantId,
+        phoneNumberId: process.env.VAPI_PHONE_NUMBER_ID,
+        customer: { number: formattedNumber }
+      });
+    } catch (vapiError) {
+      return NextResponse.json({ 
+        error: 'VAPI API call failed',
+        details: vapiError instanceof Error ? vapiError.message : 'Unknown VAPI error',
+        vapiError: (vapiError as any)?.body || (vapiError as any)?.response
+      }, { status: 400 });
+    }
 
     // Store call record in Supabase
     const callId = 'id' in call ? call.id : call.results[0]?.id;

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Home, Bot, Phone, LogOut, Phone as PhoneIcon } from "lucide-react";
+import { Home, Bot, Phone, LogOut, Settings } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import Image from "next/image";
 import { SectionBackground } from "@/components/section-background";
@@ -47,6 +47,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <NavLink href="/dashboard" icon={Home} isActive={false}>Overview</NavLink>
           <NavLink href="/dashboard/agents" icon={Bot} isActive={false}>Agents</NavLink>
           <NavLink href="/dashboard/calls" icon={Phone} isActive={false}>Calls</NavLink>
+          <NavLink href="/dashboard/integrations" icon={Settings} isActive={false}>Integrations</NavLink>
         </nav>
         <div className="mt-auto pt-4">
           <form action={async () => {

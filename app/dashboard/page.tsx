@@ -34,7 +34,7 @@ export default async function DashboardPage() {
           const durationSec = startedAt && endedAt
             ? Math.floor((new Date(endedAt).getTime() - new Date(startedAt).getTime()) / 1000)
             : 0;
-          const status = call.status === 'failed' ? 'failed' : call.status === 'ended' ? 'completed' : 'ongoing';
+          const status = call.status === 'ended' ? 'completed' : 'ongoing';
           const direction = call.type === 'outboundPhoneCall' ? 'outbound' : 'inbound';
           return {
             id: r.id as string,
@@ -78,10 +78,7 @@ export default async function DashboardPage() {
   // Additional usage metrics
   const peakCalls = usageData.length ? Math.max(...usageData.map((d) => d.calls)) : 0;
   const peakMinutes = usageData.length ? Math.max(...usageData.map((d) => d.minutes)) : 0;
-  const daysElapsed = new Date().getDate();
-  const sumCallsToDate = usageData.slice(0, daysElapsed).reduce((m, d) => m + d.calls, 0);
-  const avgCallsPerDay = daysElapsed > 0 ? Math.round(sumCallsToDate / daysElapsed) : 0;
-
+  
   // Recent calls (top 5)
   const recent = detailedCalls.slice(0, 5);
 
