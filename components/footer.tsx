@@ -15,7 +15,7 @@ export function Footer() {
               <div className="flex items-center justify-center w-8 h-8 bg-foreground text-background rounded-md">
                 <Phone className="h-4 w-4" aria-hidden="true" strokeWidth={1.75} />
               </div>
-              <span className="text-base font-semibold tracking-tight">Cogent</span>
+              <span className="text-base font-semibold tracking-tight">Hermes</span>
             </div>
             <p className="mt-3 max-w-sm text-sm leading-6 text-muted-foreground">
               Intelligent voice agents that transform customer interactions.
@@ -47,7 +47,7 @@ export function Footer() {
         </div>
 
         <div className="mt-10 border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-xs text-muted-foreground">© {year} Cogent. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground">© {year} Hermes. All rights reserved.</p>
           <div className="mt-4 sm:mt-0 flex gap-5">
             <a
               href="https://github.com/benz206/hophacks2025"

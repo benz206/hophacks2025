@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Check } from "lucide-react";
 
-export const metadata = { title: "Pricing • Cogent" };
+export const metadata = { title: "Pricing • Hermes" };
 
 export default function PricingPage() {
   return (

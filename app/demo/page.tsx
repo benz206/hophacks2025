@@ -1,4 +1,4 @@
-export const metadata = { title: "Demo • Cogent" };
+export const metadata = { title: "Demo • Hermes" };
 
 import AgentsDemo from "@/components/dashboard/agents-demo";
 import { CallsTable } from "@/components/dashboard/calls-table";

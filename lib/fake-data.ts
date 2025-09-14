@@ -132,7 +132,7 @@ export const fakeUsage: UsageSummary = {
 };
 
 export const fakeProfile: Profile = {
-  organization: "Cogent Labs",
+  organization: "Hermes Labs",
   email: "you@example.com",
   phoneNumber: "+1 202-555-0147",
   notifications: {

@@ -11,7 +11,7 @@ export function Header() {
           <div className="flex items-center justify-center w-7 h-7 bg-foreground text-background rounded-md">
             <Phone className="h-3.5 w-3.5" aria-hidden="true" strokeWidth={1.75} />
           </div>
-          <span className="text-base font-semibold tracking-tight">Cogent</span>
+          <span className="text-base font-semibold tracking-tight">Hermes</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
