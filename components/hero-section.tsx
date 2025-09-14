@@ -37,7 +37,7 @@ export function HeroSection() {
           </div>
 
           <h1 className="text-4xl font-semibold tracking-tight sm:text-6xl text-balance">
-            Save your time with <span className="text-gradient">voice agents</span>
+            Smart Agent for Your Calls
           </h1>
 
           <p className="mt-5 text-base sm:text-lg leading-7 text-muted-foreground max-w-2xl mx-auto text-pretty">
