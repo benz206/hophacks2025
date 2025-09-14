@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useThemeAppearance } from "@/components/theme-provider";
-import { HeroBackground } from "@/components/hero-background";
+import { SectionBackground } from "@/components/section-background";
 import { Eye, EyeOff, Github, Lock, Mail, CheckCircle2 } from "lucide-react";
 
 type AuthTab = "signin" | "signup" | "magic";
@@ -97,8 +97,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground">
-      <div className="relative">
-        <HeroBackground />
+      <SectionBackground>
         <div className="container mx-auto px-4 py-10">
           <div className="grid min-h-[80dvh] items-center gap-10 lg:grid-cols-2">
             <div className="hidden lg:block">
@@ -282,7 +281,7 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
-      </div>
+      </SectionBackground>
     </div>
   );
 }

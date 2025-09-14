@@ -1,7 +1,7 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-type AmbientVariant = "violet" | "blue" | "sunset"
+type AmbientVariant = "violet" | "blue" | "sunset" | "emerald"
 
 type AmbientGradientProps = {
   className?: string
@@ -12,22 +12,28 @@ type AmbientGradientProps = {
 
 const variantToStops: Record<AmbientVariant, { line: string; a: string; b: string; c: string }> = {
   violet: {
-    line: "via-[oklch(0.68_0.15_280_/_0.7)]",
-    a: "bg-[radial-gradient(ellipse_at_center,oklch(0.75_0.2_280/_0.8),transparent_60%)]",
-    b: "bg-[radial-gradient(ellipse_at_center,oklch(0.78_0.18_330/_0.75),transparent_60%)]",
-    c: "bg-[radial-gradient(ellipse_at_center,oklch(0.72_0.16_240/_0.7),transparent_60%)]",
+    line: "via-[oklch(0.68_0.18_280_/_0.8)]",
+    a: "bg-[radial-gradient(ellipse_at_center,oklch(0.76_0.24_280/_0.85),transparent_60%)]",
+    b: "bg-[radial-gradient(ellipse_at_center,oklch(0.8_0.22_330/_0.8),transparent_60%)]",
+    c: "bg-[radial-gradient(ellipse_at_center,oklch(0.74_0.2_240/_0.78),transparent_60%)]",
   },
   blue: {
-    line: "via-[oklch(0.72_0.12_230_/_0.6)]",
-    a: "bg-[radial-gradient(ellipse_at_center,oklch(0.82_0.14_230/_0.75),transparent_60%)]",
-    b: "bg-[radial-gradient(ellipse_at_center,oklch(0.78_0.12_210/_0.65),transparent_60%)]",
-    c: "bg-[radial-gradient(ellipse_at_center,oklch(0.86_0.1_250/_0.6),transparent_60%)]",
+    line: "via-[oklch(0.72_0.16_230_/_0.75)]",
+    a: "bg-[radial-gradient(ellipse_at_center,oklch(0.84_0.18_230/_0.82),transparent_60%)]",
+    b: "bg-[radial-gradient(ellipse_at_center,oklch(0.8_0.16_210/_0.72),transparent_60%)]",
+    c: "bg-[radial-gradient(ellipse_at_center,oklch(0.88_0.14_250/_0.68),transparent_60%)]",
   },
   sunset: {
-    line: "via-[oklch(0.82_0.2_50_/_0.55)]",
-    a: "bg-[radial-gradient(ellipse_at_center,oklch(0.86_0.24_30/_0.7),transparent_60%)]",
-    b: "bg-[radial-gradient(ellipse_at_center,oklch(0.82_0.22_350/_0.65),transparent_60%)]",
-    c: "bg-[radial-gradient(ellipse_at_center,oklch(0.88_0.18_70/_0.55),transparent_60%)]",
+    line: "via-[oklch(0.84_0.24_50_/_0.7)]",
+    a: "bg-[radial-gradient(ellipse_at_center,oklch(0.88_0.28_30/_0.82),transparent_60%)]",
+    b: "bg-[radial-gradient(ellipse_at_center,oklch(0.84_0.26_350/_0.75),transparent_60%)]",
+    c: "bg-[radial-gradient(ellipse_at_center,oklch(0.9_0.22_70/_0.65),transparent_60%)]",
+  },
+  emerald: {
+    line: "via-[oklch(0.8_0.2_160_/_0.75)]",
+    a: "bg-[radial-gradient(ellipse_at_center,oklch(0.9_0.22_160/_0.85),transparent_60%)]",
+    b: "bg-[radial-gradient(ellipse_at_center,oklch(0.86_0.2_140/_0.78),transparent_60%)]",
+    c: "bg-[radial-gradient(ellipse_at_center,oklch(0.92_0.18_180/_0.7),transparent_60%)]",
   },
 }
 

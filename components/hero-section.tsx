@@ -74,10 +74,10 @@ export function HeroSection() {
 
                   {/* Overview metrics (hardcoded) to match dashboard StatCards */}
                   <div className="grid gap-4 md:grid-cols-4">
-                    <StatCard label="Total calls" value="128" hint="All calls this month" accent="violet" />
-                    <StatCard label="Minutes" value="342" hint="This month" accent="blue" />
-                    <StatCard label="Avg duration" value="2m" hint="Per successful call" accent="sunset" />
-                    <StatCard label="Success rate" value="82%" hint="Completed vs total" />
+                    <StatCard label="Total calls" value="128" hint="All calls this month" accent="emerald" />
+                    <StatCard label="Minutes" value="342" hint="This month" accent="violet" />
+                    <StatCard label="Avg duration" value="2m" hint="Per successful call" accent="blue" />
+                    <StatCard label="Success rate" value="82%" hint="Completed vs total" accent="sunset" />
                   </div>
 
                   {/* Mirror dashboard layout: Recent calls + Usage */}

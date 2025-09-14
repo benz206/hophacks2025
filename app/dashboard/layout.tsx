@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Home, Bot, Phone, LogOut, Phone as PhoneIcon } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import Image from "next/image";
+import { SectionBackground } from "@/components/section-background";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const supabase = await getSupabaseServerClient();
@@ -64,7 +65,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <div className="border-b px-4 py-2 flex items-center justify-end md:hidden">
           <ThemeToggle />
         </div>
-        <main className="p-4">{children}</main>
+        <SectionBackground>
+          <main className="p-4">{children}</main>
+        </SectionBackground>
       </div>
     </div>
   );
